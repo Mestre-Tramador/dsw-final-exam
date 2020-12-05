@@ -1,7 +1,7 @@
 <?php
     namespace api;
 
-    require "./load.php";
+    require_once "./load.php";
 
     use helper\Route;
 

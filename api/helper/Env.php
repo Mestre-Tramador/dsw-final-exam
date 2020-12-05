@@ -7,7 +7,7 @@
         {
             self::startSessionIfNotStarted();
 
-            return $_SESSION["db_name"];
+            return @$_SESSION["db_name"];
         }
 
         public static final function setActualDatabase($db_name)

@@ -7,7 +7,7 @@
         private const ERROR = 400;
         private const UNPROCESSABLE = 422;
 
-        public static final function responseOK(array $data = null)
+        public static final function responseOK(?array $data = null)
         {
             self::response(self::OK);
 
@@ -28,7 +28,7 @@
             self::responseJSON($data);
         }
 
-        public static final function responseUnprocessable(array $fields = null, string $reason = "Untreated Error")
+        public static final function responseUnprocessable(?array $fields = null, string $reason = "Untreated Error")
         {
             self::response(self::UNPROCESSABLE);
 

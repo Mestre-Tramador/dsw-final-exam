@@ -1,32 +1,45 @@
 <?php
     namespace database;
 
-    require "../load.php";
+    require_once "../load.php";
 
     use helper\Env;
     use helper\Response;
     use helper\Route;
 
-    Route::POST();
-    
-    const VALID_NAMES = ["store", "loja"];
-
-    if(isset($_POST["db_name"]) && !empty($_POST["db_name"]))
+    Route::GET();
+   
+    if(Env::getActualDatabase() !== null)
     {
-        $db_name = $_POST["db_name"];
+        $connection = new Connection();
 
-        if(!in_array($db_name, VALID_NAMES))
+        if($connection->conn !== null)
         {
-            Response::responseError("Invalid Database name!");
+            Response::responseOK(["database" => Env::getActualDatabase()]);
         }
 
-        Env::setActualDatabase($db_name);
+        Env::clearActualDatabase();
+    }
 
-        if(Env::getActualDatabase())
+    $db_name = "";
+
+    foreach(VALID_NAMES as $name)
+    {
+        $connection = new Connection(false, $name);
+
+        if($connection->conn !== null)
         {
-            Response::responseOK();
+            $db_name = $name;
+            break;
         }
     }
+
+    if(!empty($db_name))
+    {
+        Env::setActualDatabase($db_name);
+
+        Response::responseOK(["message" => "Using database `{$db_name}`"]);
+    }
     
-    Response::responseError("Database name not informed!");
+    Response::responseError("There is no Database!");
 ?>

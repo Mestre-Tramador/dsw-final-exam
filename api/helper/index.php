@@ -1,7 +1,7 @@
 <?php
     namespace helper;
     
-    require "../load.php";
+    require_once "../load.php";
     
     use helper\Route;
     

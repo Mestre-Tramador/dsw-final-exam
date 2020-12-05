@@ -1,4 +1,6 @@
 <?php
+    const VALID_NAMES = ["store", "loja"];
+    
     final class Autoload
     {
         private const EXT = ".php";

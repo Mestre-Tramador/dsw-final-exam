@@ -1,3 +1,10 @@
+[0.0.2]
+- Created First version of the Front End Index.
+- Added "start" route to "database" API route, that checks the actual used Database.
+- Added "create" route to "database" API route, that create a Database Environment based on choice.
+- Improved API autoload.
+- Added resources to API.
+
 [0.0.1]
 
 - First Commit.
