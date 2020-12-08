@@ -8,16 +8,62 @@
     
     use helper\Env;
 
+    /**
+     * This class represents an Connection with the Database.
+     */
     class Connection
     {
+        /**
+         * The Database Host.
+         * 
+         * @var string $host
+         */
         private string $host = "localhost";
-        private ?string $db_name = "";
+
+        /**
+         * The Database Name, nullable to access the root privileges.
+         * 
+         * @var string|null $db_name
+         */
+        private ?string $db_name = null;
+
+        /**
+         * The username of the Database server.
+         * 
+         * @var string $username
+         */
         private string $username = "root";
+        
+        /**
+         * The password of the Database server.
+         * 
+         * @var string $passwd
+         */
         private string $passwd = "";
 
+        /**
+         * The Connection PDO object.
+         * * It can be null if occur an Exception.
+         * 
+         * @var PDO|null $conn
+         */
         public ?PDO $conn;
+
+        /**
+         * The Exception of a fail Connection.
+         * * It is null when the Connection is successfull.
+         * 
+         * @var PDOException|null $err
+         */
         public ?PDOException $err;
 
+        /**
+         * When instanciated, the class try to connect with the Database Server.
+         *
+         * @param boolean $root **TRUE** to access with root privileges.
+         * @param string $db_name It can be used a custom name for the Database.
+         * @return $this
+         */
         public function __construct(bool $root = false, string $db_name = "")
         {
             $this->conn = null;

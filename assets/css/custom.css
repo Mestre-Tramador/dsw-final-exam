@@ -1,0 +1,24 @@
+/* Start of Bootstrap overridings. */
+
+    /* Buttons with no outlines when clicked. */
+    .btn.btn-no-outline:focus,
+    .btn.btn-no-outline:active:focus,
+    .btn.active.btn-no-outline:focus
+    {
+        box-shadow: none !important;
+        outline:    none !important;
+    }
+
+    /* Height utility. */
+    .h-10
+    {
+        height: 10% !important;
+    }
+
+    /* Width utility. */
+    .w-10
+    {
+        width: 10% !important;
+    }
+
+/* End of Bootstrap overridings. */

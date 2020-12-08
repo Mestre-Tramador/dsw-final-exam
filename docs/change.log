@@ -1,3 +1,12 @@
+[0.0.3]
+- Created Form.
+- Added "reset" route to "database" API route, that reset the Database.
+- Commented bunch of code.
+- Improved redirects and responses.
+- Improved unloads.
+- Added "O Maligno" Data.
+- Removed unused assets.
+
 [0.0.2]
 - Created First version of the Front End Index.
 - Added "start" route to "database" API route, that checks the actual used Database.
