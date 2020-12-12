@@ -26,3 +26,11 @@ function getActualDatabase()
         });
     })
 }
+
+/**
+ * Redirect to the Index page.
+ */
+function goToIndex()
+{
+    window.location.replace("/store/");
+}

@@ -1,3 +1,8 @@
+[0.0.4]
+- Improved API code write.
+- Improved API doc codes.
+- Added the "new" route to "person" API route, to create a Person and an Address.
+
 [0.0.3]
 - Created Form.
 - Added "reset" route to "database" API route, that reset the Database.

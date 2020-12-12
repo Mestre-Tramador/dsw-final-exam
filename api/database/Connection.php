@@ -3,15 +3,20 @@
 
     require_once "../load.php";
 
-    use PDO;
-    use PDOException;
+    use \PDO;
     
-    use helper\Env;
+    use \PDOException;
+    
+    use \api\Autoload;
+    
+    use \helper\Env;
 
     /**
      * This class represents an Connection with the Database.
+     * 
+     * @final
      */
-    class Connection
+    final class Connection
     {
         /**
          * The Database Host.
@@ -93,4 +98,6 @@
             }
         }
     }
+
+    Autoload::unload(__FILE__);
 ?>

@@ -15,7 +15,7 @@
          * @static
          * @final
          */
-        public static final function INDEX()
+        final public static function INDEX() : void
         {
             header("Location: /store/");
             die;
@@ -28,7 +28,7 @@
          * @static
          * @final
          */
-        public static final function DOCS()
+        final public static function DOCS() : void
         {
             header("Location: /store/docs/");
             die;
@@ -41,7 +41,7 @@
          * @static
          * @final
          */
-        public static final function GET()
+        final public static function GET() : void
         {
             self::HEADER();
             
@@ -55,7 +55,7 @@
          * @static
          * @final
          */
-        public static final function POST()
+        final public static function POST() : void
         {
             self::HEADER();
 
@@ -69,7 +69,7 @@
          * @static
          * @final
          */
-        public static final function PUT()
+        final public static function PUT() : void
         {
             self::HEADER();
             
@@ -83,7 +83,7 @@
          * @static
          * @final
          */
-        public static final function DELETE()
+        final public static function DELETE() : void
         {
             self::HEADER();
             
@@ -97,12 +97,67 @@
          * @static
          * @final
          */
-        private static final function HEADER()
+        final private static function HEADER() : void
         {
             header("Access-Control-Allow-Origin: *");
             header("Access-Control-Max-Age: 3600");
             header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
             header("Acept: application/x-www-form-urlencoded; charset=UTF-8");
+        }
+
+        /**
+         * Verify if the address `POST` data is not empty and valid.
+         * 
+         * @param array $post The `POST` array.
+         * @return boolean Returns **TRUE** if the address is valid and correctly filled.
+         */
+        final public static function isAddressPostData(array $post) : bool
+        {
+            /**
+             * All the possible address data sended by post.
+             * 
+             * @var string $zip_code
+             * @var string $street
+             * @var string $number
+             * @var string $complement
+             * @var string $reference
+             * @var string $district
+             * @var string $city
+             * @var string $state
+             */
+            [
+                "zip_code"   => $zip_code,
+                "street"     => $street,
+                "number"     => $number,
+                "complement" => $complement,
+                "reference"  => $reference,
+                "district"   => $district,
+                "city"       => $city,
+                "state"      => $state
+            ] = $post;
+
+            return (!self::isAddressPostDataEmpty($zip_code, $street, $number, $district, $city, $state));
+        }
+
+        /**
+         * Iterate between all the fields and verify if none is empty.
+         * 
+         * @param string ...$fields The fields of the Address.
+         * @return boolean Return **TRUE** if at least one is empty.
+         */
+        final private static function isAddressPostDataEmpty(string ...$fields) : bool
+        {
+            $isEmpty = false;
+
+            foreach($fields as $field)
+            {
+                if(empty($field))
+                {
+                    $isEmpty = true;
+                }
+            }
+
+            return $isEmpty;
         }
     }
 ?>

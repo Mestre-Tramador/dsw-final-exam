@@ -67,7 +67,7 @@
                                                                     <div class="col-5 mb-3">
                                                                         <label for="name">Nome</label>
                                                                         <input type="text" id="name" class="form-control" placeholder="Nome" />
-                                                                        <div id="name_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the name. --></div>
+                                                                        <div id="name_feedback" class="invalid-feedback">Primeiro Nome é um campo obrigatório!</div>
                                                                     </div>
                                                                 <!-- End of the main card person form name input. -->
 
@@ -75,7 +75,7 @@
                                                                     <div class="col-5 mb-3">
                                                                         <label for="surname">Sobrenome</label>
                                                                         <input type="text" id="surname" class="form-control" placeholder="Sobrenome" />
-                                                                        <div id="surname_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the surname. --></div>
+                                                                        <div id="surname_feedback" class="invalid-feedback">Segundo Nome é um campo obrigatório!</div>
                                                                     </div>
                                                                 <!-- End of the main card person form surname input. -->
 
@@ -101,7 +101,7 @@
                                                                     <div class="col-5 mb-3">
                                                                         <label for="document">CPF</label>
                                                                         <input type="text" id="document" class="form-control" placeholder="___.___.___-__" maxlength="14" />
-                                                                        <div id="document_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the document. --></div>
+                                                                        <div id="document_feedback" class="invalid-feedback">Documento é um campo obrigatório e precisa ser válido!</div>
                                                                     </div>
                                                                 <!-- End of the main card person form document input. -->
 
@@ -109,7 +109,7 @@
                                                                     <div class="col-5 mb-3">
                                                                         <label for="birth_date">Data de Nascimento</label>
                                                                         <input type="date" id="birth_date" class="form-control" />
-                                                                        <div id="birth_date_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the birth date. --></div>
+                                                                        <div id="birth_date_feedback" class="invalid-feedback">Data é um campo obrigatório!</div>
                                                                     </div>
                                                                 <!-- End of the main card person form birth date input. -->
 
@@ -122,7 +122,7 @@
                                                                             <option value="M">Masculino</option>
                                                                             <option value="O">Outro</option>
                                                                         </select>
-                                                                        <div id="gender_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the gender. --></div>
+                                                                        <div id="gender_feedback" class="invalid-feedback">Gênero é um campo obrigatório!</div>
                                                                     </div>
                                                                 <!-- End of the main card person form gender select box. -->
                                                             </div>
@@ -134,7 +134,7 @@
                                                                     <div class="col-6 mb-3">
                                                                         <label for="phone">Telefone</label>
                                                                         <input type="text" id="phone" class="form-control" placeholder="(DDD) ____-____" maxlength="14" />
-                                                                        <div id="phone_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the phone. --></div>
+                                                                        <div id="phone_feedback" class="invalid-feedback">Ao menos um Telefone de Contato deve ser preenchido!</div>
                                                                     </div>
                                                                 <!-- End of the main card person form phone input. -->
 
@@ -142,7 +142,7 @@
                                                                     <div class="col-6 mb-3">
                                                                         <label for="cellphone">Celular</label>
                                                                         <input type="text" id="cellphone" class="form-control" placeholder="(DDD) _____-____" maxlength="15" />
-                                                                        <div id="cellphone_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the cellphone. --></div>
+                                                                        <div id="cellphone_feedback" class="invalid-feedback">Ao menos um Telefone de Contato deve ser preenchido!</div>
                                                                     </div>
                                                                 <!-- End of the main card person form cellphone input. -->
                                                             </div>
@@ -152,7 +152,7 @@
                                                     <!-- Start of the main card form buttons row. -->
                                                         <div id="btn_row" class="form-row">
                                                             <div class="col-12 mb-3">
-                                                                <button class="btn btn-block btn-success mt-4" onclick="console.log('salvou');">
+                                                                <button class="btn btn-block btn-success mt-4" onclick="savePerson(event)">
                                                                     Salvar
                                                                 </button>
                                                             </div>
@@ -176,7 +176,7 @@
                                                                 <div class="col-7 mb-3">
                                                                     <label for="street">Rua</label>
                                                                     <input type="text" id="street" class="form-control" placeholder="Rua" />
-                                                                    <div id="street_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the street. --></div>
+                                                                    <div id="street_feedback" class="invalid-feedback">Rua é um campo obrigatório!</div>
                                                                 </div>
                                                             <!-- End of the main card address form street input. -->
 
@@ -184,7 +184,7 @@
                                                                 <div class="col-5 mb-3">
                                                                     <label for="number">Número</label>
                                                                     <input type="number" id="number" class="form-control" placeholder="Número" />
-                                                                    <div id="number_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the number. --></div>
+                                                                    <div id="number_feedback" class="invalid-feedback">Número é um campo obrigatório!</div>
                                                                 </div>
                                                             <!-- End of the main card address form number input. -->
                                                         </div>
@@ -196,7 +196,7 @@
                                                                 <div class="col-8 mb-3">
                                                                     <label for="district">Bairro</label>
                                                                     <input type="text" id="district" class="form-control" placeholder="Bairro" />
-                                                                    <div id="district_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the district. --></div>
+                                                                    <div id="district_feedback" class="invalid-feedback">Bairro é um campo obrigatório!</div>
                                                                 </div>
                                                                 <!-- End of the main card address form district input. -->
 
@@ -204,7 +204,7 @@
                                                                     <div class="col-4 mb-3">
                                                                         <label for="zip_code">CEP</label>
                                                                         <input type="text" id="zip_code" class="form-control" placeholder="_____-___" maxlength="9" />
-                                                                        <div id="zip_code_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the zip code. --></div>
+                                                                        <div id="zip_code_feedback" class="invalid-feedback">CEP é um campo obrigatório!</div>
                                                                     </div>
                                                                 <!-- End of the main card address form zip code input. -->
                                                             </div>
@@ -216,7 +216,6 @@
                                                                     <div class="col-6 mb-3">
                                                                         <label for="complement">Complemento</label>
                                                                         <input type="text" id="complement" class="form-control" placeholder="Complemento" />
-                                                                        <div id="complement_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the complement. --></div>
                                                                     </div>
                                                                 <!-- End of the main card address form complement input. -->
 
@@ -224,7 +223,6 @@
                                                                     <div class="col-6 mb-3">
                                                                         <label for="reference">Referência</label>
                                                                         <input type="text" id="reference" class="form-control" placeholder="Referência" />
-                                                                        <div id="reference_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the reference. --></div>
                                                                     </div>
                                                                 <!-- End of the main card address form reference input. -->
                                                             </div>
@@ -236,7 +234,7 @@
                                                                     <div class="col-9 mb-3">
                                                                         <label for="city">Cidade</label>
                                                                         <input type="text" id="city" class="form-control" placeholder="Cidade" />
-                                                                        <div id="city_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the city. --></div>
+                                                                        <div id="city_feedback" class="invalid-feedback">Cidade é um campo obrigatório!</div>
                                                                     </div>
                                                                 <!-- End of the main card address form city input. -->
 
@@ -273,7 +271,7 @@
                                                                             <option value="TO">TO</option>
                                                                             <option value="DF">DF</option>
                                                                         </select>
-                                                                        <div id="state_feedback" class="invalid-feedback"><!-- Here will be printed invalid feedbacks for the state. --></div>
+                                                                        <div id="state_feedback" class="invalid-feedback">Estado é um campo obrigatório!</div>
                                                                     </div>
                                                                 <!-- End of the main card address form state select box. -->
                                                             </div>
@@ -294,6 +292,7 @@
         <!-- Start of the Scripts Section. -->
             <?=getScriptsDeclarations()?>
             <script type="application/javascript" src="/store/person/index.js?=<?=time()?>"></script>
+            <script type="application/javascript" src="/store/person/form.js?=<?=time()?>"></script>
         <!-- End of the Scripts Section. -->
     </body>
 </html>

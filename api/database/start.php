@@ -3,9 +3,9 @@
 
     require_once "../load.php";
 
-    use helper\Env;
-    use helper\Response;
-    use helper\Route;
+    use \helper\Env;
+    use \helper\Response;
+    use \helper\Route;
 
     Route::GET();
 
@@ -15,7 +15,6 @@
      */
     $db_name = "";
    
-
     /**
      *  First it checks if there is a Database on the ENV,
      * if it still exists on the server, then an Connection is tested.

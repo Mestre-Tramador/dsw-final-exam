@@ -123,7 +123,7 @@
      */
     function nameOfTheMaligno()
     {
-        return "O Maligno.";
+        return "O Maligno";
     }
 
     /**

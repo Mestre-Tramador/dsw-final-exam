@@ -3,11 +3,11 @@
 
     require_once "../load.php";
 
-    use helper\Env;
-    use helper\Response;
-    use helper\Route;
+    use \helper\Env;
+    use \helper\Response;
+    use \helper\Route;
     
-    use manager\DatabaseManager;
+    use \manager\DatabaseManager;
 
     Route::GET();
 

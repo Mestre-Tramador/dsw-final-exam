@@ -11,7 +11,7 @@
         /**
          * Extension of the files.
          * 
-         * @property-read string EXT
+         * @var string EXT
          */
         private const EXT = ".php";
 
@@ -23,7 +23,7 @@
          * @return $this
          * @final
          */
-        private final function __construct()
+        final private function __construct()
         {
             spl_autoload_extensions(self::EXT);
             spl_autoload_register([$this, "loadAll"]);
@@ -36,7 +36,7 @@
          * @return void
          * @final
          */
-        private final function loadAll(string $class)
+        final private function loadAll(string $class) : void
         {
             require_once (__DIR__ . "\\" . $class . spl_autoload_extensions());
         }
@@ -46,10 +46,10 @@
          * method simply calls the constructor.
          *
          * @return void
-         * @final
          * @static
+         * @final
          */
-        public static final function load()
+        final public static function load() : void
         {
             new Autoload();
         }
@@ -58,12 +58,12 @@
          * Verify if the file is being included or loaded.
          * On the last case, redirect to the index.
          *
-         * @param [string] $file (option) The path of the file.
+         * @param string $file **[optional]** The path of the file.
          * @return void
-         * @final
          * @static
+         * @final
          */
-        public static final function unload($file = __FILE__)
+        final public static function unload($file = __FILE__) : void
         {
             if(str_replace("\\", "/", $file) == str_replace("\\", "/", ($_SERVER["DOCUMENT_ROOT"] . $_SERVER["SCRIPT_NAME"])))
             {

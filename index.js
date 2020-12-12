@@ -47,6 +47,11 @@ function createDatabase(name)
     }
 }
 
+/**
+ * Initialize event for the index,
+ * wich search for the actual Database and handle every case,
+ * printing the data list or display the Database Creation. 
+ */
 function init()
 {
     /**
@@ -104,7 +109,7 @@ function refreshEnvironment()
      */
     function onSuccess(data, status, xhr)
     {        
-        window.location.replace("/store/");
+        goToIndex();
     }
 }
 

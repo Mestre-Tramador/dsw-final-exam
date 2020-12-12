@@ -61,6 +61,9 @@ CREATE TABLE `address` (
 		'TO',
 		'DF'
 	) CHARACTER SET `utf8mb4` COLLATE `utf8mb4_general_ci` NOT NULL,
+	`created_at` DATETIME NOT NULL,
+	`updated_at` DATETIME NOT NULL,
+	`deleted_at` DATETIME,
 	PRIMARY KEY (`id`)
 );
 

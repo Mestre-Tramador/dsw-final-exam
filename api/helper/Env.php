@@ -16,13 +16,20 @@
         private const VALID_NAMES = ["store", "loja"];
 
         /**
+         * Determines if a Database Deletion will be softned or not.
+         * 
+         * @var bool
+         */
+        private const SAFE_DELETE = true;
+
+        /**
          * Get on the Env Session the actual Database name.
          *
-         * @return string
+         * @return string|null The current Database name or simple null.
          * @static
          * @final
          */
-        public static final function getActualDatabase()
+        final public static function getActualDatabase() : ?string
         {
             self::startSessionIfNotStarted();
 
@@ -37,7 +44,7 @@
          * @static
          * @final
          */
-        public static final function setActualDatabase(string $db_name)
+        final public static function setActualDatabase(string $db_name) : void
         {
             self::startSessionIfNotStarted();
             
@@ -56,7 +63,7 @@
          * @static
          * @final
          */
-        public static final function clearActualDatabase()
+        final public static function clearActualDatabase() : void
         {
             self::startSessionIfNotStarted();
 
@@ -66,13 +73,25 @@
         /**
          * Getter of the Database Valid Names.
          *
-         * @return string[]
+         * @return string[] An array of the string with the valid names.
          * @static
          * @final
          */
-        public static final function getDatabaseValidNames()
+        final public static function getDatabaseValidNames() : array
         {
             return self::VALID_NAMES;
+        }
+
+        /**
+         * Getter for the Database Deletion type.
+         *
+         * @return boolean **TRUE** determines Safe Deletion and `FALSE` determines Force Deletion.
+         * @static
+         * @final
+         */
+        final public static function getDeletionType() : bool
+        {
+            return self::SAFE_DELETE;
         }
 
         /**
@@ -82,7 +101,7 @@
          * @static
          * @final
          */
-        private static final function startSessionIfNotStarted()
+        final private static function startSessionIfNotStarted() : void
         {
             if(session_status() != PHP_SESSION_ACTIVE)
             {

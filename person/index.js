@@ -190,7 +190,7 @@ function documentTextDigits(event)
  * Get an array with all the form controls.
  * 
  * @param {Boolean} [address] Pass *TRUE* for getting only the controls of the address form.
- * @returns {Array<HTMLInputElement|HTMLSelectElement>} The respective array.
+ * @returns {(HTMLInputElement|HTMLSelectElement)[]} The respective array.
  */
 function getFullForm(address = false)
 {
@@ -415,6 +415,14 @@ function handleTypeChange(event)
     clear(birthDate);
     clear(phone);
     clear(cellphone);
+    
+    displayControlFeedback(false, name.id);
+    displayControlFeedback(false, surname.id);
+    displayControlFeedback(false, doc.id);
+    displayControlFeedback(false, birthDate.id);
+    displayControlFeedback(false, gender.id);
+    displayControlFeedback(false, phone.id);
+    displayControlFeedback(false, cellphone.id);
 
     /**
      * Completly clear all the values from an input.
@@ -601,12 +609,10 @@ function init()
         control.addEventListener("input", documentTextDigits);
     });    
 
-    if(ENV["database"] === null)
-    {
-        getActualDatabase()
-        .then((success) => { ENV["database"] = success["data"]["database"]; })
-        .catch((rejection) => { window.location.replace("/store/"); });
-    }
+    setActualDatabase();
+
+    // ! As it begin selected, defines it.
+    ENV["type"] = "physical";
 }
 
 /**
@@ -637,6 +643,20 @@ function phoneMask(event)
         {
             phone.value += "-";
         }
+    }
+}
+
+/**
+ * Check if there is no Database on the ENV to
+ * Execute a Request for it in this case.
+ */
+function setActualDatabase()
+{
+    if(ENV["database"] === null)
+    {
+        getActualDatabase()
+        .then((success) => { ENV["database"] = success["data"]["database"]; })
+        .catch((rejection) => { goToIndex(); });
     }
 }
 

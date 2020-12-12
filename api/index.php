@@ -3,9 +3,11 @@
 
     require_once "./load.php";
 
-    use helper\Route;
+    use \helper\Route;
 
     Route::DOCS();
     
-    // ? Besides commonly redirecting to the index, this route redirect to the docs.
+    /**
+     * ? Besides commonly redirecting to the index, this route redirect to the docs.
+     */
 ?>

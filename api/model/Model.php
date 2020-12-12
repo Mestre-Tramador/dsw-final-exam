@@ -1,10 +1,6 @@
 <?php
     namespace model;
 
-    use PDO;
-
-    use database\Connection;
-
     /**
      * A Model of a Database table.
      * @abstract
@@ -12,11 +8,30 @@
     abstract class Model
     {
         /**
+         * The ID of the Model.
+         * 
+         * @var int|null $id
+         */
+        public ?int $id;
+
+        /**
+         * When creating a Model from the Database, its ID are required.
+         *
+         * @param int|null $id If passed, then the required model ID is loaded.
+         * @return $this
+         */
+        public function __construct(?int $id = null)
+        {
+            $this->id = $id;
+        }
+        
+        /**
          * Return all the data of the Model as an Array.
          *
-         * @return array
+         * @return array The array is associative.
+         * @abstract
          */
-        abstract static function asArray();
+        abstract public function asArray() : array;
     }
     
 ?>

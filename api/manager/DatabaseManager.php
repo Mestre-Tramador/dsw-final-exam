@@ -4,10 +4,12 @@
     require_once "../load.php";
 
     use PDO;
-
-    use database\Connection;
     
-    use helper\Env;
+    use \api\Autoload; 
+
+    use \database\Connection;
+    
+    use \helper\Env;
 
     /**
      * A Manager to handle Database functions.
@@ -19,9 +21,9 @@
         /**
          * This is a Root Connection to execute heavy tasks.
          * 
-         * @var PDO $root
+         * @var \database\Connection $root
          */
-        private PDO $root;
+        private Connection $root;
 
         /**
          * The manager at the beginning create the Connection with root privileges.
@@ -30,7 +32,7 @@
          */
         public function __construct()
         {
-            $this->root = (new Connection(true))->conn;
+            $this->root = new Connection(true);
         }
 
         /**
@@ -40,11 +42,11 @@
          * @param string $name The Database name.
          * @return bool The result of the creation
          */
-        public function createDatabase(string $name)
+        public function createDatabase(string $name) : bool
         {
             $builder = file_get_contents("../resources/{$name}.sql");
             
-            $builder = $this->root->prepare($builder);
+            $builder = $this->getRootConnection()->prepare($builder);
 
             $statement = $builder->execute();
 
@@ -61,15 +63,27 @@
          *
          * @return bool The result of the exclusion.
          */
-        public function destroyDatabase()
+        public function destroyDatabase() : bool
         {
             $db_name = Env::getActualDatabase();
 
             $builder = "DROP DATABASE `{$db_name}`";
 
-            $builder = $this->root->prepare($builder);
+            $builder = $this->getRootConnection()->prepare($builder);
 
             return $builder->execute();
         }
+
+        /**
+         * Getter for the PDO Connection object.
+         *
+         * @return \PDO The Connection with root privileges.
+         */
+        final private function getRootConnection() : \PDO
+        {
+            return $this->root->conn;
+        }
     }
+
+    Autoload::unload(__FILE__);
 ?>
