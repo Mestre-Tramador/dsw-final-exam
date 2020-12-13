@@ -1,5 +1,7 @@
 <?php
-    namespace person;
+    namespace person;    
+
+    require_once "../load.php";
 
     use \controller\AddressController;
     use \controller\PersonController;
@@ -9,8 +11,6 @@
     
     use \model\Address;
     use \model\Person;
-
-    require_once "../load.php";
 
     Route::POST();
 
@@ -136,7 +136,6 @@
         
         /** @var string $state */
         $submodel->state = $_POST["state"];
-
 
         /**
          * The array containing the result and the data of the Address, if created.

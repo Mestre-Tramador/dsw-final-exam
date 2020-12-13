@@ -291,8 +291,9 @@
         
         <!-- Start of the Scripts Section. -->
             <?=getScriptsDeclarations()?>
-            <script type="application/javascript" src="/store/person/index.js?=<?=time()?>"></script>
+            <script type="application/javascript" src="/store/person/index.js?=<?=time()?>" defer></script>
             <script type="application/javascript" src="/store/person/form.js?=<?=time()?>"></script>
+            <script type="application/javascript" src="/store/person/options.js?=<?=time()?>"></script>
         <!-- End of the Scripts Section. -->
     </body>
 </html>

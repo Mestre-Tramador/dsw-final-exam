@@ -55,7 +55,7 @@
                                                 <!-- End of the listage title. -->
 
                                                 <!-- Start of the persons list. -->
-                                                    <div id="persons" class="list-group">
+                                                    <div id="persons" class="list-group overflow-auto">
                                                         <!-- Here will be printed the list of persons. -->
                                                     </div>
                                                 <!-- End of the persons list. -->

@@ -613,6 +613,9 @@ function init()
 
     // ! As it begin selected, defines it.
     ENV["type"] = "physical";
+
+    getDataToUpdate()
+    .then((person) => setFormData(person));
 }
 
 /**

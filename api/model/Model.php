@@ -24,6 +24,13 @@
         {
             $this->id = $id;
         }
+
+        /**
+         * Find and set the data of the model.
+         *
+         * @return void
+         */
+        abstract protected function find() : void;
         
         /**
          * Return all the data of the Model as an Array.

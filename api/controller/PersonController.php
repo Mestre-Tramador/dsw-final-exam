@@ -3,9 +3,13 @@
 
     require_once "../load.php";
 
+    use \PDO;
+
     use \api\Autoload;
 
     use \database\Connection;
+    
+    use model\Person;
 
     /**
      * This Controller handle the \``person`\` table.
@@ -29,7 +33,7 @@
          *
          * @param \model\Person $model The Person model with setted data.
          * @return array The array returned contains a **result** `boolean` key with the query result,
-         * and another **model** `array` key withe the created model as an array.
+         * and another **model** `array` key with the created model as an array.
          */
         public function create(object $model) : array
         {         
@@ -105,9 +109,97 @@
             return $response;
         }
 
+        /**
+         * Get all valid Persons on the Database.
+         *
+         * @param int|null $id Pass an ID to return the indexed Person.
+         * @return array The list of the retrivied models as arrays.
+         */
         public function read(?int $id = null) : array
         {
-            return [];
+            if(isset($id))
+            {
+                return $this->readById($id);
+            }
+
+            /**
+             * Select query.
+             * 
+             * @var string $q
+             */
+            $q = "SELECT
+                *
+            FROM
+                `{$this->getTableName()}` AS `p`
+            LEFT JOIN `address` AS `a`
+            ON
+                `a`.`id` = `p`.`address_id`
+            WHERE
+                `p`.`deleted_at` IS NULL
+            ";
+
+            /**
+             * Statement to prepare and bind the values.
+             * 
+             * @var \PDOStatement $stmt
+             */
+            $stmt = $this->getConnection()->prepare($q);
+            
+            $stmt->execute();
+
+            /**
+             * The fetched associative array list of Addresses.
+             * 
+             * @var array $fetch
+             */
+            $fetch = $this->handleReadResult($stmt->fetchAll(PDO::FETCH_NAMED));
+
+            return $fetch;
+        }
+
+        /**
+         * Retrieve a specific Person by its ID.
+         *
+         * @param int $id The Person ID.
+         * @return array The Person as a Model Array.
+         */
+        protected function readById(int $id) : array
+        {
+            /**
+             * Select query.
+             * 
+             * @var string $q
+             */
+            $q = "SELECT
+                *
+            FROM
+                `{$this->getTableName()}` AS `p`
+            LEFT JOIN `address` AS `a`
+            ON
+                `a`.`id` = `p`.`address_id`
+            WHERE
+                `p`.`deleted_at` IS NULL AND `p`.`id` = :id
+            ";
+
+            /**
+             * Statement to prepare and bind the values.
+             * 
+             * @var \PDOStatement $stmt
+             */
+            $stmt = $this->getConnection()->prepare($q);
+
+            $stmt->bindValue(":id", $id);
+            
+            $stmt->execute();
+
+            /**
+             * The fetched associative array of the Address.
+             * 
+             * @var array $fetch
+             */
+            $fetch = $this->formatFetchResult($stmt->fetch(PDO::FETCH_NAMED));
+
+            return $fetch;
         }
 
         /**
@@ -247,6 +339,77 @@
             $stmt->bindValue(":id", $address_id);
 
             $stmt->execute();
+        }
+
+        /**
+         * Format the readed result list to a better array.
+         *
+         * @param array $result The array list with the retrievied models.
+         * @return array Still an array but with better key value pairs.
+         */
+        private function handleReadResult(array $result) : array
+        {
+            for($i = 0; $i < count($result); $i++)
+            {                 
+                $result[$i] = $this->formatFetchResult($result[$i]);
+            }
+    
+            return $result;
+        }
+
+        /**
+         * Format a readed result to a better array.
+         *
+         * @param array $result The array fetched with the retrievied model.
+         * @return array Still an array but with better key value pairs.
+         */
+        private function formatFetchResult(array $result) : array
+        {
+            // ? Create a new subarray to hold the address data.
+            $result["address"] = [];
+
+            // ? Pass every address data to this new array.
+            $result["address"]["id"]         = $result["id"][1];
+            $result["address"]["zip_code"]   = $result["zip_code"];
+            $result["address"]["street"]     = $result["street"];
+            $result["address"]["number"]     = $result["number"];
+            $result["address"]["complement"] = $result["complement"];
+            $result["address"]["reference"]  = $result["reference"];
+            $result["address"]["district"]   = $result["district"];
+            $result["address"]["city"]       = $result["city"];
+            $result["address"]["state"]      = $result["state"];
+            $result["address"]["created_at"] = $result["created_at"][1];
+            $result["address"]["updated_at"] = $result["updated_at"][1];
+            $result["address"]["deleted_at"] = $result["deleted_at"][1];
+
+            // ? Clear address spare data.
+            $result["id"]         = $result["id"][0];
+            $result["created_at"] = $result["created_at"][0];
+            $result["updated_at"] = $result["updated_at"][0];
+            $result["deleted_at"] = $result["deleted_at"][0];
+
+            // ? Unset now unused address key values.
+            unset($result["address_id"]);
+            unset($result["zip_code"]);
+            unset($result["street"]);
+            unset($result["number"]);
+            unset($result["complement"]);
+            unset($result["reference"]);
+            unset($result["district"]);
+            unset($result["city"]);
+            unset($result["state"]);
+
+            // ? Cast numeric address values.
+            if(isset($result["address"]["id"]))
+            {
+                $result["address"]["id"]     = (int) $result["address"]["id"];
+                $result["address"]["number"] = (int) $result["address"]["number"];
+            }
+
+            // ? Cast numeric person values.
+            $result["id"] = (int) $result["id"];
+
+            return $result;
         }
     }
 

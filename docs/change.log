@@ -1,3 +1,8 @@
+[0.0.5]
+- Added index to the "person" API route, wich read the list or a singular registry.
+- The first page lists all registered persons.
+- The form page now loads correctly the selected person, if.
+
 [0.0.4]
 - Improved API code write.
 - Improved API doc codes.

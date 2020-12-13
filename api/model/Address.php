@@ -3,6 +3,8 @@
 
     require_once "../load.php";
 
+    use \controller\AddressController;
+
     /**
      * The Model representantion of the \``address`\` table.
      */
@@ -94,6 +96,45 @@
         public function __construct(?int $id = null)
         {
             parent::__construct($id);
+
+            if(isset($this->id))
+            {
+                $this->find();
+            }
+        }
+
+        /**
+         * Execute a Controller read action to set the Address data.
+         *
+         * @return void
+         */
+        protected function find(): void
+        {
+            /**
+             * The controller for the operation.
+             * 
+             * @var \controller\PersonController $controller
+             */
+            $controller = new AddressController();
+
+            /**
+             * The readed model already fetch.
+             * 
+             * @var array $model
+             */
+            $model = ($controller->read($this->id))["fetch"];
+
+            $this->zip_code   = $model["zip_code"];
+            $this->street     = $model["street"];
+            $this->number     = (int) $model["number"];
+            $this->complement = $model["complement"];
+            $this->reference  = $model["reference"];
+            $this->district   = $model["district"];
+            $this->city       = $model["city"];
+            $this->state      = $model["state"];
+            $this->created_at = $model["created_at"];
+            $this->updated_at = $model["updated_at"];
+            $this->deleted_at = $model["deleted_at"];
         }
 
         /**

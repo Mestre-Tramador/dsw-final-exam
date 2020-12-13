@@ -112,7 +112,7 @@ function savePerson(event)
                      * 
                      * @type {String}
                      */
-                    let value = ((toUnmask.includes(control.id) || control.id == "surname" && ENV["type"] == "legal") ? unmask(control.value.trim()) : control.value.trim());
+                    let value = ((toUnmask.includes(control.id) || control.id == "surname" &&  isLegal(ENV["type"])) ? unmask(control.value.trim()) : control.value.trim());
     
                     data += `&${control.id}=${value}`;
                 });
@@ -147,6 +147,73 @@ function savePerson(event)
     {
         return (personForm === true && addressForm === true);
     }
+}
+
+/**
+ * When there is a Person data, then the form controls values are setted.
+ * 
+ * @param {{
+ *  id:Number,
+ *  address:{
+ *      id:?Number,
+ *      zip_code:?String,
+ *      street:?String,
+ *      number:?Number,
+ *      complement:?String,
+ *      reference:?String,
+ *      district:?String,
+ *      city:?String,
+ *      state:?"AC"|"AL"|"AP"|"AM"|"BA"|"CE"|"ES"|"GO"|"MA"|"MT"|"MS"|"MG"|"PA"|"PB"|"PR"|"PE"|"PI"|"RJ"|"RN"|"RS"|"RO"|"RR"|"SC"|"SP"|"SE"|"TO"|"DF",
+ *      created_at:?String,
+ *      updated_at:?String,
+ *      deleted_at:null
+ *  },
+ *  type:"physical"|"legal",
+ *  name:String,
+ *  surname:String,
+ *  gender:"F"|"M"|"O",
+ *  document:String,
+ *  phone:?String,
+ *  cellphone:?String,
+ *  birth_date:String,
+ *  created_at:String,
+ *  updated_at:String,
+ *  deleted_at:null
+ * }|{}} person It can be an empty object or a full version for all form.
+ */
+function setFormData(person)
+{
+    if(Object.keys(person).length == 0)
+    {
+        return;
+    }
+
+    document.getElementById(`type_${person.type}`).click();
+
+    getFullForm()
+    .forEach((control) => {
+        if(control.id == "type_physical" || control.id == "type_legal")
+        {
+            return;
+        }
+
+        if(getFullForm(true).includes(control))
+        {
+            if(person.address[control.id] !== null)
+            {
+                control.value = formMask(control.id, person.address[control.id]);                
+            }
+
+            return;
+        }
+
+        if(person[control.id] !== null)
+        {
+            control.value = formMask(control.id, person[control.id]);             
+        }
+    });
+
+    convertFormButtons();
 }
 
 /**
@@ -357,7 +424,7 @@ function validateForm()
             {
                 case "name":                    
                 case "surname":
-                    if(control.id === "surname" && ENV["type"] === "legal")
+                    if(control.id === "surname" && isLegal(ENV["type"]))
                     {
                         return validateDocument("physical", unmask(control.value));
                     }
@@ -404,7 +471,7 @@ function validateForm()
                  */
                 let digitSecond = 0;
 
-                if(type === "physical")
+                if(isPhysical(type))
                 {
                     /**
                      * The multiplier for the validation.
@@ -475,7 +542,7 @@ function validateForm()
                     return true; 
                 }
 
-                if(type === "legal")
+                if(isLegal(type))
                 {
                     /**
                      * The final multiplier for the validation.

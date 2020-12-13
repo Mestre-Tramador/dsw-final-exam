@@ -63,6 +63,15 @@
          * @abstract
          */
         abstract protected function read(?int $id = null) : array;
+
+        /**
+         * Get the indexed registry of the Model on the Database.
+         *
+         * @param int $id An ID of the Model.
+         * @return array The indexed Model.
+         * @abstract
+         */
+        abstract protected function readById(int $id) : array;
         
         /**
          * Update an specific register of the Model on the Database.
@@ -87,15 +96,15 @@
          * Convert null or empty fields to a `NULL` string for querys.
          *
          * @param string|null $field The field of the Model
-         * @return string The field itself of a string equal to *NULL*.
+         * @return string|null The field itself or **NULL**.
          * @static
          * @final
          */
-        protected static final function convertField(?string $field) : string
+        protected static final function convertField(?string $field) : ?string
         {
             if(!isset($field) || empty($field) || strtolower($field) == "null")
             {
-                return "NULL";
+                return null;
             }
 
             return $field;

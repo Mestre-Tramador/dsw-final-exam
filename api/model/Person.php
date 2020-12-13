@@ -2,6 +2,8 @@
     namespace model;
 
     require_once "../load.php";
+    
+    use \controller\PersonController;
 
     class Person extends Model
     {
@@ -111,6 +113,11 @@
             $this->address_id = $address_id;
 
             $this->address = new Address($this->address_id);
+
+            if(isset($this->id))
+            {
+                $this->find();
+            }
         }
 
         /**
@@ -124,6 +131,35 @@
             $this->address_id = $address_id;
 
             $this->address = new Address($this->address_id);
+        }
+
+        /**
+         * Execute a Controller read funtion to set the Person (and Address, if) data.
+         *
+         * @return void
+         */
+        protected function find(): void
+        {
+            $controller = new PersonController();
+
+            $model = ($controller->read($this->id))["fetch"];
+
+            $this->type = $model["type"];
+            $this->name = $model["name"];
+            $this->surname = $model["surname"];
+            $this->gender = $model["gender"];
+            $this->document = $model["document"];
+            $this->phone = $model["phone"];
+            $this->cellphone = $model["cellphone"];
+            $this->birth_date = $model["birth_date"];
+            $this->created_at = $model["created_at"];
+            $this->updated_at = $model["updated_at"];
+            $this->deleted_at = $model["deleted_at"];
+
+            if(isset($model["address_id"]))
+            {
+                $this->setAddress($model["address_id"]);
+            }
         }
 
         /**
@@ -143,9 +179,26 @@
          */
         public function asArray() : array
         {
+            /**
+             * The address representation.
+             * 
+             * @var null $address
+             */
+            $address = null;
+            
+            if(isset($this->address->id))
+            {
+                /**
+                 * If there is an Address, then it gains its data.
+                 * 
+                 * @var array $address
+                 */
+                $address = $this->address->asArray();
+            }
+
             return [
                 "id"         => $this->id,
-                "address"    => $this->address->asArray(),
+                "address"    => $address,
                 "type"       => $this->type,
                 "name"       => $this->name,
                 "surname"    => $this->surname,

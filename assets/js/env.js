@@ -34,3 +34,25 @@ function goToIndex()
 {
     window.location.replace("/store/");
 }
+
+/**
+ * Compare if the given Person type matches the Legal Person type.
+ * 
+ * @param {String} type The person type.
+ * @returns {Boolean} **TRUE** if is a Legal Person.
+ */
+function isLegal(type)
+{
+    return (type === "legal");
+}
+
+/**
+ * Compare if the given Person type matches the Physical Person type.
+ * 
+ * @param {String} type The person type.
+ * @returns {Boolean} **TRUE** if is a Physical Person.
+ */
+function isPhysical(type)
+{
+    return (type === "physical");
+}
