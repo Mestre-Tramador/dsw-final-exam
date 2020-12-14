@@ -113,7 +113,7 @@
             /**
              * The controller for the operation.
              * 
-             * @var \controller\PersonController $controller
+             * @var \controller\AddressController $controller
              */
             $controller = new AddressController();
 
@@ -122,7 +122,7 @@
              * 
              * @var array $model
              */
-            $model = ($controller->read($this->id))["fetch"];
+            $model = $controller->read($this->id);
 
             $this->zip_code   = $model["zip_code"];
             $this->street     = $model["street"];

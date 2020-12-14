@@ -121,12 +121,12 @@
         }
 
         /**
-         * A setter for the Address, determined by its ID.
+         * A setter for the Address, determined by its ID or **NULL**.
          *
-         * @param int $address_id The ID of the Foreign Address entry.
+         * @param int $address_id The ID of the Foreign Address entry or **NULL** to remove.
          * @return void
          */
-        public function setAddress(int $address_id) : void
+        public function setAddress(?int $address_id) : void
         {
             $this->address_id = $address_id;
 
@@ -142,7 +142,7 @@
         {
             $controller = new PersonController();
 
-            $model = ($controller->read($this->id))["fetch"];
+            $model = $controller->read($this->id);
 
             $this->type = $model["type"];
             $this->name = $model["name"];

@@ -35,6 +35,90 @@ function displayControlFeedback(display, id)
 }
 
 /**
+ * Gather all data from the form and URI encodes it to pass by POST.
+ * 
+ * @param {String} [id] Pass if there is an ID to include on the data.
+ * @param {String} [address_id] Pass if there is an Address ID to include on the data.
+ * @returns {String}
+ */
+function gatherData(id = "", address_id = null)
+{
+    address_id = (address_id === "null" ? null : address_id);
+    
+    /**
+     * The form controls wich need to be unmasked.
+     * 
+     * @type {["cellphone", "document", "phone", "zip_code"]}
+     */
+    const toUnmask = ["cellphone", "document", "phone", "zip_code"];
+
+    /**
+     * The data string uncoded.
+     * 
+     * @type {String}
+     */
+    let data = `id=${id}${(address_id !== null ? `&address_id=${address_id}` : ``)}`;
+
+    /**
+     * A special string to handle the type.
+     * 
+     * @type {String}
+     */
+    let type = "";
+
+    getFullForm().forEach((control) => {
+        if(control.id == "type_physical" || control.id == "type_legal")
+        {
+            /**
+             * The checkbox for the Physical Person Type.
+             * 
+             * @type {HTMLInputElement}
+             */
+            let physical = document.getElementById("type_physical");
+
+            /**
+             * The checkbox for the Legal Person Type.
+             * 
+             * @type {HTMLInputElement}
+             */
+            let legal = document.getElementById("type_legal");
+
+            if(type == "")
+            {
+                type += `&type=${(physical.checked ? physical.value : legal.value)}`;
+            }
+
+            return;
+        }                    
+
+        /**
+         * The param value to append to the data.
+         * 
+         * @type {String}
+         */
+        let value = ((toUnmask.includes(control.id) || control.id == "surname" &&  isLegal(ENV["type"])) ? unmask(control.value.trim()) : control.value.trim());
+
+        data += `&${control.id}=${value}`;
+    });
+
+    data += type;
+
+    return encodeURI(data);
+}
+
+/**
+ * Compares to see if both forms are valid.
+ * 
+ * @param {Boolean} personForm The validation result for the Person Form.
+ * @param {Boolean} addressForm The validation result for the Address Form.
+ * @returns {Boolean} **TRUE** if the form is valid.
+ */
+function isValid(personForm, addressForm)
+{
+    return (personForm === true && addressForm === true);
+}
+
+/**
  * Validate the form and, if valid, do a Request to save the Person on the Database.
  * When success, then it redirects to the Index, else display the error.
  *  
@@ -50,77 +134,9 @@ function savePerson(event)
                 url     : "/store/api/person/new.php",
                 type    : "POST",
                 data    : gatherData(),
-                success : (data, status, xhr) => { goToIndex(); },
+                success : (data, status, xhr) => goToIndex(),
                 error   : (xhr, status, error) => onError(xhr, status, error)
-            });
-
-            /**
-             * Gather all data from the form and URI encodes it to pass by POST.
-             * 
-             * @returns {String}
-             */
-            function gatherData()
-            {
-                /**
-                 * The form controls wich need to be unmasked.
-                 * 
-                 * @type {["cellphone", "document", "phone", "zip_code"]}
-                 */
-                const toUnmask = ["cellphone", "document", "phone", "zip_code"];
-
-                /**
-                 * The data string uncoded.
-                 * 
-                 * @type {String}
-                 */
-                let data = "id=";
-
-                /**
-                 * A special string to handle the type.
-                 * 
-                 * @type {String}
-                 */
-                let type = "";
-
-                getFullForm().forEach((control) => {
-                    if(control.id == "type_physical" || control.id == "type_legal")
-                    {
-                        /**
-                         * The checkbox for the Physical Person Type.
-                         * 
-                         * @type {HTMLInputElement}
-                         */
-                        let physical = document.getElementById("type_physical");
-
-                        /**
-                         * The checkbox for the Legal Person Type.
-                         * 
-                         * @type {HTMLInputElement}
-                         */
-                        let legal = document.getElementById("type_legal");
-    
-                        if(type == "")
-                        {
-                            type += `&type=${(physical.checked ? physical.value : legal.value)}`;
-                        }
-
-                        return;
-                    }                    
-
-                    /**
-                     * The param value to append to the data.
-                     * 
-                     * @type {String}
-                     */
-                    let value = ((toUnmask.includes(control.id) || control.id == "surname" &&  isLegal(ENV["type"])) ? unmask(control.value.trim()) : control.value.trim());
-    
-                    data += `&${control.id}=${value}`;
-                });
-    
-                data += type;
-
-                return encodeURI(data);
-            }
+            });           
 
             /**
              * Print on the console the error.
@@ -135,18 +151,6 @@ function savePerson(event)
             }
         }
     });
-
-    /**
-     * Compares to see if both forms are valid.
-     * 
-     * @param {Boolean} personForm The validation result for the Person Form.
-     * @param {Boolean} addressForm The validation result for the Address Form.
-     * @returns {Boolean} **TRUE** if the form is valid.
-     */
-    function isValid(personForm, addressForm)
-    {
-        return (personForm === true && addressForm === true);
-    }
 }
 
 /**
@@ -212,6 +216,9 @@ function setFormData(person)
             control.value = formMask(control.id, person[control.id]);             
         }
     });
+
+    ENV["id"] = person.id;
+    ENV["address_id"] = person.address.id;
 
     convertFormButtons();
 }

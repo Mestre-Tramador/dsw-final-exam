@@ -8,8 +8,6 @@
     use \api\Autoload;
 
     use \database\Connection;
-    
-    use model\Person;
 
     /**
      * This Controller handle the \``person`\` table.
@@ -31,12 +29,19 @@
          * is not filled is the Address ID, since there is
          * need to create an Address before a Person.
          *
+         * If is setted and ID on the model, then it's updated.
+         * 
          * @param \model\Person $model The Person model with setted data.
          * @return array The array returned contains a **result** `boolean` key with the query result,
          * and another **model** `array` key with the created model as an array.
          */
         public function create(object $model) : array
         {         
+            if(isset($model->id))
+            {
+                return $this->update($model->id, $model);
+            }
+
             /**
              * Insert query.
              * 

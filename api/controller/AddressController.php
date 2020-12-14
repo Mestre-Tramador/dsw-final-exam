@@ -27,12 +27,19 @@
         /**
          * Create the Address with all passed data.
          * 
+         * If is setted and ID on the model, then it's updated.
+         * 
          * @param \model\Address $model The Address Model with setted data.
          * @return array The array returned contains a **result** `boolean` key with the query result,
          * and another **model** `array` key with the created model as an array.
          */
         public function create(object $model) : array
-        {            
+        {
+            if(isset($model->id))
+            {
+                return $this->update($model->id, $model);
+            }
+            
             /**
              * Insert query.
              * 
@@ -268,9 +275,7 @@
             WHERE
                 `id` = :id
             ";
-
-            $this->cascadeDeleteWithPersons($id);
-
+            
             if(!self::isSafeDeletion())
             {
                 /**
@@ -297,27 +302,6 @@
 
             $stmt->execute();
         }    
-        
-        /**
-         * Execute an Cascade Deletion with the \``person`\` table.
-         *
-         * @param int $id The deleted Address ID.
-         * @return void
-         * @final
-         */
-        final private function cascadeDeleteWithPersons(int $id) : void
-        {
-            /**
-             * A controller for Persons.
-             * 
-             * @var \controller\PersonController $person
-             */
-            $person = new PersonController();
-
-            $person->deleteAddress($id);
-
-            unset($person);
-        }
     }
     
     Autoload::unload(__FILE__);

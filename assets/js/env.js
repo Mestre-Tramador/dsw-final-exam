@@ -1,12 +1,13 @@
 /**
  * Constant to act as an environment.
  * 
- * @type {{database:"store"|"loja"|null, user:Number|null, type:"physical"|"legal"|null}}
+ * @type {{address_id:Number|null, database:"store"|"loja"|null, id:Number|null, type:"physical"|"legal"|null}}
  */
 const ENV = {
-    database : null,
-    user     : null,
-    type     : null
+    address_id     : null,
+    database       : null,
+    id             : null,
+    type           : null
 };
 
 /**

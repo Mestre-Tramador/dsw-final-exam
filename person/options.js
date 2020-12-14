@@ -151,8 +151,13 @@ function convertFormButtons()
         button.classList.add("btn", "btn-block", "btn-primary", "mt-4");
 
 
+        // ? Adding Attributes.
+        button.setAttribute("id", ENV["id"]);
+        button.setAttribute("address_id", ENV["address_id"]);
+
+
         // ? Adding the click Event.
-        button.addEventListener("click", (event) => {console.log(event)});
+        button.addEventListener("click", (event) => updatePerson(event));
 
 
         // ? Adding the text.
@@ -208,4 +213,52 @@ function convertFormButtons()
         
         return column;
     }
+}
+
+/**
+ * Execute a Request to Update the selected person data.
+ * 
+ * @param {MouseEvent} event The click event.
+ */
+function updatePerson(event)
+{
+    /**
+     * The Person ID.
+     * 
+     * @type {Number}
+     */
+    const id = event.target.getAttribute("id");
+
+    /**
+     * The Person Address ID.
+     * 
+     * @type {Number|null}
+     */
+    const address_id = event.target.getAttribute("address_id");
+
+    validateForm()
+    .then((validation) => {
+        if(isValid(validation[0], validation[1]))
+        {            
+            $.ajax({
+                url     : "/store/api/person/update.php",
+                type    : "PUT",
+                data    : gatherData(id, address_id),
+                success : (data, status, xhr) => goToIndex(),
+                error   : (xhr, status, error) => onError(xhr, status, error)
+            });           
+
+            /**
+             * Print on the console the error.
+             * 
+             * @param {jqXHR} xhr jQuery XHR object.
+             * @param {String} status HTTP Status.
+             * @param {{reason:String}} error Returns the reason.
+             */
+            function onError(xhr, status, error)
+            {
+                console.log(xhr, status, error);
+            }
+        }
+    });
 }

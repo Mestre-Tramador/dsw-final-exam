@@ -2,6 +2,20 @@
     namespace api;
     
     /**
+     * The array for `DELETE` routes.
+     * 
+     * @global array $_DELETE
+     */
+    $_PUT = [];
+    
+    /**
+     * The array for `DELETE` routes.
+     * 
+     * @global array $_DELETE
+     */
+    $_DELETE = []; 
+    
+    /**
      * Class for the autoload of the namespaces.
      * 
      * @final
@@ -26,7 +40,9 @@
         final private function __construct()
         {
             spl_autoload_extensions(self::EXT);
-            spl_autoload_register([$this, "loadAll"]);
+            spl_autoload_register([$this, "loadAll"]);  
+            
+            $this->loadVerbs();
         }
 
         /**
@@ -39,6 +55,31 @@
         final private function loadAll(string $class) : void
         {
             require_once (__DIR__ . "\\" . $class . spl_autoload_extensions());
+        }
+
+        /**
+         * Load the new global array verbs for `PUT` and `DELETE` routes.
+         *
+         * @return void
+         * @final
+         */
+        final private function loadVerbs() : void
+        {
+            /** @var array $_PUT */
+            global $_PUT;
+
+            /** @var array $_DELETE */
+            global $_DELETE;
+
+            if(!strcasecmp($_SERVER["REQUEST_METHOD"], "PUT"))
+            {
+                parse_str(file_get_contents("php://input"), $_PUT);
+            }
+
+            if(!strcasecmp($_SERVER["REQUEST_METHOD"], "DELETE"))
+            {
+                parse_str(file_get_contents("php://input"), $_DELETE);
+            }              
         }
 
         /**
