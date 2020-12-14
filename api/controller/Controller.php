@@ -87,10 +87,10 @@
          * Delete an specific register of the Model on the Database.
          *
          * @param int $id An ID of the Model.
-         * @return void
+         * @return bool The result.
          * @abstract
          */
-        abstract protected function delete(int $id) : void;
+        abstract protected function delete(int $id) : bool;
 
         /**
          * Convert null or empty fields to a `NULL` string for querys.

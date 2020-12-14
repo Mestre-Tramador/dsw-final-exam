@@ -1,3 +1,9 @@
+[0.0.7]
+- Implemented "delete" route to "person" API route, to delete cascading a person on the Database.
+- Fixed some deletion methods.
+- Fixed a problem where the Person Address was not loading.
+- Improved Model use. 
+
 [0.0.6]
 - Now the API has new global verbs for the PUT and DELETE HTTP.
 - Implemented "update" route to "person" API route, that updates the sended person data.
@@ -29,5 +35,4 @@
 - Added resources to API.
 
 [0.0.1]
-
 - First Commit.

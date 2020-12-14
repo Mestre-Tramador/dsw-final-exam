@@ -259,9 +259,9 @@
          * entry is fully removed from the Database.
          *
          * @param int $id The ID of the Address to delete.
-         * @return void
+         * @return bool The result of the deletion.
          */
-        public function delete(int $id) : void
+        public function delete(int $id) : bool
         {
             /**
              * Update (as Delete) query.
@@ -300,7 +300,7 @@
 
             $stmt->bindValue(":id", $id);
 
-            $stmt->execute();
+            return $stmt->execute();
         }    
     }
     

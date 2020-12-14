@@ -95,14 +95,14 @@
         /**
          * If there is an Address ID, then the submodel is reloaded with data.
          */
-        if(isset($_PUT["address_id"]))
+        if(isset($model->address_id))
         {
             /**
              * This model starts with data.
              * 
              * @var \model\Address $submodel
              */
-            $submodel = new Address($_PUT["address_id"]);
+            $submodel = new Address($model->address_id);
         }
 
         /**
@@ -137,7 +137,7 @@
 
         $model->setAddress($submodel->id);
     }
-    else if(isset($_PUT["address_id"]))
+    else if(isset($model->address_id))
     {
         /**
          * The controller for the deleted Address.
@@ -146,9 +146,9 @@
          */
         $subcontroller = new AddressController();
 
-        $subcontroller->delete($_PUT["address_id"]);
+        $subcontroller->delete($model->address_id);
 
-        $controller->deleteAddress($_PUT["address_id"]);
+        $controller->deleteAddress($model->address_id);
 
         $model->setAddress(null);
     }

@@ -156,9 +156,9 @@
             $this->updated_at = $model["updated_at"];
             $this->deleted_at = $model["deleted_at"];
 
-            if(isset($model["address_id"]))
+            if(isset($model["address"]["id"]))
             {
-                $this->setAddress($model["address_id"]);
+                $this->setAddress($model["address"]["id"]);
             }
         }
 

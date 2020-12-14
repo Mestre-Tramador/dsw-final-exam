@@ -1,4 +1,39 @@
 /**
+ * Execute a Request to delete from the Database the Person.
+ * 
+ * @param {MouseEvent} event The click mouse event.
+ */
+function deletePerson(event)
+{
+    /**
+     * The Person ID.
+     * 
+     * @type {Number}
+     */
+    const id = event.target.getAttribute("id");
+
+    $.ajax({
+        url     : "/store/api/person/delete.php",
+        type    : "DELETE",
+        data    : encodeURI(`id=${id}`),
+        success : (data, status, xhr) => goToIndex(),
+        error   : (xhr, status, error) => onError(xhr, status, error)
+    });           
+
+    /**
+     * Print on the console the error.
+     * 
+     * @param {jqXHR} xhr jQuery XHR object.
+     * @param {String} status HTTP Status.
+     * @param {{reason:String}} error Returns the reason.
+     */
+    function onError(xhr, status, error)
+    {
+        console.log(xhr, status, error);
+    }
+}
+
+/**
  * Do a Request to get the Person data from the Database.
  * 
  * @returns {Promise<{
@@ -198,9 +233,12 @@ function convertFormButtons()
 
         button.classList.add("btn", "btn-block", "btn-danger", "mt-4");
 
+        // ? Adding Attributes.
+        button.setAttribute("id", ENV["id"]);
+
 
         // ? Adding the click Event.
-        button.addEventListener("click", (event) => {console.log(event)});
+        button.addEventListener("click", (event) => deletePerson(event));
 
         
         // ? Adding the text.
