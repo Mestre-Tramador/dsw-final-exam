@@ -1,5 +1,9 @@
 <?php
     namespace model;
+    
+    require_once "../load.php";
+
+    use \api\Autoload;
 
     /**
      * A Model of a Database table.
@@ -41,4 +45,5 @@
         abstract public function asArray() : array;
     }
     
+    Autoload::unload(__FILE__);
 ?>

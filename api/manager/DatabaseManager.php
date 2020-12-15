@@ -3,7 +3,7 @@
 
     require_once "../load.php";
 
-    use PDO;
+    use \PDO;
     
     use \api\Autoload; 
 

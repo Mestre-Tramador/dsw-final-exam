@@ -18,6 +18,11 @@
      */
     function getFavIconDeclaration()
     {
+        /**
+         * Cache preventer.
+         * 
+         * @var int $cache
+         */
         $cache = time();
         
         return "<link rel=\"icon\" type=\"image/x-icon\" href=\"/store/favicon.ico?={$cache}\" />\n";
@@ -36,6 +41,11 @@
      */
     function getMetaTagsDeclarations()
     {
+        /**
+         * HTML String to Meta declarations.
+         * 
+         * @var string $metas
+         */
         $metas = "";
 
         $metas .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n\n\t\t\t";
@@ -57,8 +67,18 @@
      */
     function getScriptsDeclarations()
     {
+        /**
+         * HTML String to JS declarations.
+         * 
+         * @var string $scripts
+         */
         $scripts = "";
 
+        /**
+         * Cache preventer.
+         * 
+         * @var int $cache
+         */
         $cache = time();
 
         $scripts .= "<script type=\"application/javascript\" src=\"/store/assets/js/jquery.min.js?={$cache}\"></script>\n\t\t\t";
@@ -82,8 +102,18 @@
      */
     function getStylesDeclarations()
     {
+        /**
+         * HTML String to CSS declarations.
+         * 
+         * @var string $styles
+         */
         $styles = "";
 
+        /**
+         * Cache preventer.
+         * 
+         * @var int $cache
+         */
         $cache = time();
 
         $styles .= "<link rel=\"stylesheet\" href=\"/store/assets/css/bootstrap.css.map?={$cache}\" />\n\t\t\t";

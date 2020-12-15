@@ -1,6 +1,10 @@
 <?php
     namespace helper;
 
+    require_once "../load.php";
+
+    use \api\Autoload;
+
     /**
      * Helper class with variables of ENV.
      * 
@@ -109,4 +113,6 @@
             }
         }
     }
+
+    Autoload::unload(__FILE__);
 ?>

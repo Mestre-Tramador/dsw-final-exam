@@ -1,6 +1,10 @@
 <?php
     namespace helper;
 
+    require_once "../load.php";
+    
+    use \api\Autoload;
+
     /**
      * Class to manage headers, redirects and routes types.
      * 
@@ -160,4 +164,6 @@
             return $isEmpty;
         }
     }
+
+    Autoload::unload(__FILE__);
 ?>

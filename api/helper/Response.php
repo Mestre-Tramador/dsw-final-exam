@@ -1,6 +1,10 @@
 <?php
     namespace helper;
-    
+
+    require_once "../load.php";
+
+    use \api\Autoload;
+
     final class Response
     {
         /**
@@ -80,11 +84,11 @@
 
                 foreach ($fields as $key => $value)
                 {
-                    $reason.=$value;
+                    $reason .= $value;
                     
                     if(isset($fields[$key + 1]))
                     {
-                        $reason.=", ";
+                        $reason .= ", ";
                     }
                 }
             }
@@ -123,4 +127,6 @@
             die;
         }
     }
+
+    Autoload::unload(__FILE__);
 ?>

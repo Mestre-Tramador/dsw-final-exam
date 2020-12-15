@@ -3,6 +3,8 @@
 
     require_once "../load.php";
 
+    use \api\Autoload;
+
     use \controller\AddressController;
 
     /**
@@ -166,4 +168,6 @@
             ];
         }
     }
+
+    Autoload::unload(__FILE__);
 ?>

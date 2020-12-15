@@ -40,7 +40,11 @@ function createDatabase(name)
      */
     function onError(xhr, status, error)
     {
-        /** @type {HTMLDivElement} */
+        /**
+         * The div HTML Element to present the feedback.
+         * 
+         * @type {HTMLDivElement}
+         */
         const feedback = document.getElementById("database_feedback");
         
         feedback.classList.add("d-block");
@@ -180,6 +184,11 @@ function setDatabaseDeleteText(display)
  */
 function setDatabaseFlavorText(display, database = "")
 {
+    /**
+     * A span flavor text to the Database.
+     * 
+     * @type {HTMLSpanElement}
+     */
     const flavorText = document.getElementById("database_flavor");
 
     if(!display)
@@ -190,6 +199,11 @@ function setDatabaseFlavorText(display, database = "")
     flavorText.classList.remove("d-none");
     flavorText.classList.add("d-block");
 
+    /**
+     * The text to present.
+     * 
+     * @type {String}
+     */
     let text = "";
 
     switch(database)
@@ -249,11 +263,11 @@ function printPersonList(data)
     persons.innerHTML = ``;
 
     data.forEach((person) => {
-        persons.innerHTML+=`<!-- Start of the ${person["name"]}'s item. -->`;
+        persons.innerHTML += `<!-- Start of the ${person["name"]}'s item. -->`;
         
         persons.appendChild(createPersonListItem(person));
 
-        persons.innerHTML+=`<!-- End of the ${person["name"]}'s item. -->`;
+        persons.innerHTML += `<!-- End of the ${person["name"]}'s item. -->`;
     });
 
     /**
@@ -427,7 +441,7 @@ function printPersonList(data)
      */
     function formatBirthDate(birth_date)
     {
-        birth_date+=" ";
+        birth_date += " ";
 
         /**
          * Date object to handle.

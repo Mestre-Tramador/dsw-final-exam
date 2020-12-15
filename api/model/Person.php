@@ -2,6 +2,8 @@
     namespace model;
 
     require_once "../load.php";
+
+    use \api\Autoload;
     
     use \controller\PersonController;
 
@@ -210,4 +212,6 @@
             ];
         }
     }
+
+    Autoload::unload(__FILE__);
 ?>
