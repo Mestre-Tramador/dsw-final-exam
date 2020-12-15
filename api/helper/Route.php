@@ -30,7 +30,7 @@
          */
         final public static function DOCS() : void
         {
-            header("Location: /store/docs/");
+            header("Location: https://github.com/Mestre-Tramador/dsw-final-exam/blob/master/docs/API.md");
             die;
         }
 

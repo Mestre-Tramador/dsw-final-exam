@@ -1,3 +1,8 @@
+[0.0.8]
+- Removed "O Maligno" data from the PHP and transfered it to Documentation.
+- Fixed the API route do Docs, now redirecting to GitHub.
+- Added API Reference.
+
 [0.0.7]
 - Implemented "delete" route to "person" API route, to delete cascading a person on the Database.
 - Fixed some deletion methods.
