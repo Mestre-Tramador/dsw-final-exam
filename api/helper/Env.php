@@ -103,9 +103,8 @@
          *
          * @return void
          * @static
-         * @final
          */
-        final private static function startSessionIfNotStarted() : void
+        private static function startSessionIfNotStarted() : void
         {
             if(session_status() != PHP_SESSION_ACTIVE)
             {

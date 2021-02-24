@@ -25,7 +25,7 @@
         /**
          * Extension of the files.
          * 
-         * @var string EXT
+         * @var string
          */
         private const EXT = ".php";
 
@@ -34,10 +34,9 @@
          * it loads the extensions and
          * all namespaces.
          * 
-         * @return $this
-         * @final
+         * @return void
          */
-        final private function __construct()
+        private function __construct()
         {
             spl_autoload_extensions(self::EXT);
             spl_autoload_register([$this, "loadAll"]);  
@@ -50,9 +49,8 @@
          *
          * @param string $class The name of the class to load.
          * @return void
-         * @final
          */
-        final private function loadAll(string $class) : void
+        private function loadAll(string $class) : void
         {
             require_once (__DIR__ . "\\" . $class . spl_autoload_extensions());
         }
@@ -61,9 +59,8 @@
          * Load the new global array verbs for `PUT` and `DELETE` routes.
          *
          * @return void
-         * @final
          */
-        final private function loadVerbs() : void
+        private function loadVerbs() : void
         {
             /** @var array $_PUT */
             global $_PUT;

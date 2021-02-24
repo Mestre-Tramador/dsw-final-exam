@@ -1,3 +1,8 @@
+[0.0.10]
+- Refactored code to work with PHP8.
+- Refactored constructor methods to work with PHP8.
+- Improved Connection class visibility, encapsulating the database inner object (PDO).
+
 [0.0.9]
 - Improved Documentation.
 

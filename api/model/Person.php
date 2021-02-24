@@ -106,7 +106,7 @@
          *
          * @param int|null $id The Person ID, if exists.
          * @param int|null $address_id To already set an Address, then its ID must be passed along the Person's.
-         * @return $this
+         * @return void
          */
         public function __construct(?int $id = null, ?int $address_id = null)
         {

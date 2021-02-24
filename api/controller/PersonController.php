@@ -17,7 +17,7 @@
         /**
          * When creating this Controller, the necessary data is already setted.
          * 
-         * @return $this
+         * @return void
          */
         public function __construct()
         {

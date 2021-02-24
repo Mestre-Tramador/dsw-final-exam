@@ -99,9 +99,8 @@
          *
          * @return void
          * @static
-         * @final
          */
-        final private static function HEADER() : void
+        private static function HEADER() : void
         {
             header("Access-Control-Allow-Origin: *");
             header("Access-Control-Max-Age: 3600");
@@ -148,8 +147,9 @@
          * 
          * @param string ...$fields The fields of the Address.
          * @return boolean Return **TRUE** if at least one is empty.
+         * @static
          */
-        final private static function isAddressPostDataEmpty(string ...$fields) : bool
+        private static function isAddressPostDataEmpty(string ...$fields) : bool
         {
             $isEmpty = false;
 

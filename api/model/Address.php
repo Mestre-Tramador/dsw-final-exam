@@ -93,7 +93,7 @@
          * The Address can be started with an ID or not.
          *
          * @param int|null $id If an ID is passed, then it's loaded.
-         * @return $this
+         * @return void
          */
         public function __construct(?int $id = null)
         {

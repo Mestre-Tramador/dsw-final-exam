@@ -19,32 +19,18 @@
     abstract class Controller
     {
         /**
-         * A connection with the Database.
-         * 
-         * @var \database\Connection $conn
-         */
-        private Connection $conn;
-
-        /**
-         * The table name wich will be used.
-         * 
-         * @var string $table_name
-         */
-        private string $table_name;
-
-        /**
          * When creating a Controller, there is need to pass
          * a valid Connection and the table name.
          *
-         * @param \database\Connection $conn The Connection already setted.
-         * @param string $table_name The exact name.
-         * @return $this
+         * @param \database\Connection $conn A connection with the Database.
+         * @param string $table_name The table name wich will be used.
+         * @return void
          */
-        protected function __construct(Connection $conn, string $table_name)
-        {
-            $this->conn = $conn;
-            $this->table_name = $table_name;
-        }        
+        protected function __construct(
+            private Connection $conn,
+            private string $table_name
+        )
+        { }        
 
         /**
          * Create a register of the Model on the Database.
@@ -139,7 +125,7 @@
          */
         protected function getConnection() : \PDO
         {
-            return $this->conn->conn;
+            return $this->conn->getConnection();
         }
 
         /**

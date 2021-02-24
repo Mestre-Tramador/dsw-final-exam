@@ -17,23 +17,17 @@
      * @final
      */
     final class DatabaseManager
-    {
-        /**
-         * This is a Root Connection to execute heavy tasks.
-         * 
-         * @var \database\Connection $root
-         */
-        private Connection $root;
-
+    {       
         /**
          * The manager at the beginning create the Connection with root privileges.
          * 
-         * @return $this
+         * @param \database\Connection $root This is a Root Connection to execute heavy tasks.
+         * @return void
          */
-        public function __construct()
-        {
-            $this->root = new Connection(true);
-        }
+        public function __construct(
+            private Connection $root = new Connection(true)
+        )
+        { }
 
         /**
          * With the given name, search on the resources and create a Database.
@@ -79,9 +73,9 @@
          *
          * @return \PDO The Connection with root privileges.
          */
-        final private function getRootConnection() : \PDO
+        private function getRootConnection() : \PDO
         {
-            return $this->root->conn;
+            return $this->root->getConnection();
         }
     }
 

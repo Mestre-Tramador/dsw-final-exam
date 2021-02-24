@@ -52,7 +52,7 @@
          * 
          * @var PDO|null $conn
          */
-        public ?PDO $conn;
+        private ?PDO $conn;
 
         /**
          * The Exception of a fail Connection.
@@ -60,14 +60,14 @@
          * 
          * @var PDOException|null $err
          */
-        public ?PDOException $err;
+        private ?PDOException $err;
 
         /**
          * When instanciated, the class try to connect with the Database Server.
          *
          * @param boolean $root **TRUE** to access with root privileges.
          * @param string $db_name It can be used a custom name for the Database.
-         * @return $this
+         * @return void
          */
         public function __construct(bool $root = false, string $db_name = "")
         {
@@ -96,6 +96,32 @@
             {
                 $this->err = $exception;
             }
+        }
+
+        /**
+         * Getter for the connection.
+         *
+         * @return \PDO The connection PDO object.
+         */
+        public function getConnection() : ?\PDO
+        {
+            return $this->conn;
+        }
+
+        /**
+         * Getter for the connection error.
+         *
+         * @param boolean $throw **[optional]** If `TRUE`, then the error is throwed.
+         * @return PDOException
+         */
+        public function getError(bool $throw = false) : \PDOException
+        {
+            if($throw)
+            {
+                throw $this->err;
+            }
+
+            return $this->err;
         }
     }
 

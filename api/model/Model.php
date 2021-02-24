@@ -10,24 +10,17 @@
      * @abstract
      */
     abstract class Model
-    {
-        /**
-         * The ID of the Model.
-         * 
-         * @var int|null $id
-         */
-        public ?int $id;
-
+    {        
         /**
          * When creating a Model from the Database, its ID are required.
          *
-         * @param int|null $id If passed, then the required model ID is loaded.
-         * @return $this
+         * @param int|null $id The ID of the Model.
+         * @return void
          */
-        public function __construct(?int $id = null)
-        {
-            $this->id = $id;
-        }
+        public function __construct(
+            public ?int $id = null
+        )
+        { }
 
         /**
          * Find and set the data of the model.

@@ -104,9 +104,8 @@
          * @param integer $code HTTP Response Code.
          * @return void
          * @static
-         * @final
          */
-        final private static function response(int $code) : void
+        private static function response(int $code) : void
         {
             header("Content-Type: application/json; charset=UTF-8");
             
@@ -119,9 +118,8 @@
          * @param array $data The array to be encoded.
          * @return void
          * @static
-         * @final
          */
-        final private static function responseJSON(array $data) : void
+        private static function responseJSON(array $data) : void
         {
             echo json_encode($data);
             die;

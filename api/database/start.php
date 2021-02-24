@@ -25,7 +25,7 @@
     {
         $connection = new Connection();
 
-        if($connection->conn !== null)
+        if($connection->getConnection() !== null)
         {
             $db_name = Env::getActualDatabase();
 
@@ -45,7 +45,7 @@
     {
         $connection = new Connection(false, $name);
 
-        if($connection->conn !== null)
+        if($connection->getConnection() !== null)
         {
             $db_name = $name;
             break;
