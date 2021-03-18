@@ -19,7 +19,7 @@
          * @static
          * @final
          */
-        final public static function INDEX() : void
+        public static function INDEX() : void
         {
             header("Location: /store/");
             die;
@@ -32,7 +32,7 @@
          * @static
          * @final
          */
-        final public static function DOCS() : void
+        public static function DOCS() : void
         {
             header("Location: https://github.com/Mestre-Tramador/dsw-final-exam/blob/master/docs/API.md");
             die;
@@ -45,7 +45,7 @@
          * @static
          * @final
          */
-        final public static function GET() : void
+        public static function GET() : void
         {
             self::HEADER();
             
@@ -59,7 +59,7 @@
          * @static
          * @final
          */
-        final public static function POST() : void
+        public static function POST() : void
         {
             self::HEADER();
 
@@ -73,7 +73,7 @@
          * @static
          * @final
          */
-        final public static function PUT() : void
+        public static function PUT() : void
         {
             self::HEADER();
             
@@ -87,7 +87,7 @@
          * @static
          * @final
          */
-        final public static function DELETE() : void
+        public static function DELETE() : void
         {
             self::HEADER();
             
@@ -114,7 +114,7 @@
          * @param array $post The `POST` array.
          * @return boolean Returns **TRUE** if the address is valid and correctly filled.
          */
-        final public static function isAddressPostData(array $post) : bool
+        public static function isAddressPostData(array $post) : bool
         {
             /**
              * All the possible address data sended by post.

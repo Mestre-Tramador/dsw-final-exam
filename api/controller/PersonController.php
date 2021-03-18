@@ -8,20 +8,24 @@
     use \api\Autoload;
 
     use \database\Connection;
+    
+    use model\Model;
 
     /**
      * This Controller handle the \``person`\` table.
+     * 
+     * @final
      */
-    class PersonController extends Controller
+    final class PersonController extends Controller
     {
         /**
-         * When creating this Controller, the necessary data is already setted.
+         * Only the Controller can create itself.
          * 
          * @return void
          */
-        public function __construct()
+        private function __construct()
         {
-            parent::__construct((new Connection()), "person");
+            parent::__construct(Connection::new(), "person");
         }
 
         /**
@@ -35,19 +39,26 @@
          * @return array The array returned contains a **result** `boolean` key with the query result,
          * and another **model** `array` key with the created model as an array.
          */
-        public function create(object $model) : array
+        public static function create(Model $model) : array
         {         
-            if(isset($model->id))
+            if(self::containsData($model))
             {
-                return $this->update($model->id, $model);
+                return self::update($model->id(), $model);
             }
+
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\PersonController $controller
+             */
+            $controller = new PersonController();
 
             /**
              * Insert query.
              * 
              * @var string $q
              */   
-            $q = "INSERT INTO `{$this->getTableName()}`(
+            $q = "INSERT INTO `{$controller->table()}`(
                 `type`,
                 `name`,
                 `surname`,
@@ -77,15 +88,15 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
-            $stmt->bindValue(":type", self::convertField($model->type));
-            $stmt->bindValue(":name", self::convertField($model->name));
-            $stmt->bindValue(":surname", self::convertField($model->surname));
-            $stmt->bindValue(":gender", self::convertField($model->gender));
-            $stmt->bindValue(":document", self::convertField($model->document));
-            $stmt->bindValue(":phone", self::convertField($model->phone));
-            $stmt->bindValue(":cellphone", self::convertField($model->cellphone));
+            $stmt->bindValue(":type",       self::convertField($model->type));
+            $stmt->bindValue(":name",       self::convertField($model->name));
+            $stmt->bindValue(":surname",    self::convertField($model->surname));
+            $stmt->bindValue(":gender",     self::convertField($model->gender));
+            $stmt->bindValue(":document",   self::convertField($model->document));
+            $stmt->bindValue(":phone",      self::convertField($model->phone));
+            $stmt->bindValue(":cellphone",  self::convertField($model->cellphone));
             $stmt->bindValue(":birth_date", self::convertField($model->birth_date));
           
             /**
@@ -95,7 +106,7 @@
              */
             $result = $stmt->execute();
 
-            $model->id = $this->getConnection()->lastInsertId();      
+            $model->newId((int) $controller->connection()->lastInsertId());
             
             /**
              * Final array for return.
@@ -120,12 +131,19 @@
          * @param int|null $id Pass an ID to return the indexed Person.
          * @return array The list of the retrivied models as arrays.
          */
-        public function read(?int $id = null) : array
+        public static function read(?int $id = null) : array
         {
             if(isset($id))
             {
-                return $this->readById($id);
+                return self::readById($id);
             }
+
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\PersonController $controller
+             */
+            $controller = new PersonController();
 
             /**
              * Select query.
@@ -135,7 +153,7 @@
             $q = "SELECT
                 *
             FROM
-                `{$this->getTableName()}` AS `p`
+                `{$controller->table()}` AS `p`
             LEFT JOIN `address` AS `a`
             ON
                 `a`.`id` = `p`.`address_id`
@@ -148,7 +166,7 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
             
             $stmt->execute();
 
@@ -157,72 +175,34 @@
              * 
              * @var array $fetch
              */
-            $fetch = $this->handleReadResult($stmt->fetchAll(PDO::FETCH_NAMED));
+            $fetch = $controller->handleReadResult($stmt->fetchAll(PDO::FETCH_NAMED));
 
             return $fetch;
-        }
+        }        
 
         /**
-         * Retrieve a specific Person by its ID.
-         *
-         * @param int $id The Person ID.
-         * @return array The Person as a Model Array.
-         */
-        protected function readById(int $id) : array
-        {
-            /**
-             * Select query.
-             * 
-             * @var string $q
-             */
-            $q = "SELECT
-                *
-            FROM
-                `{$this->getTableName()}` AS `p`
-            LEFT JOIN `address` AS `a`
-            ON
-                `a`.`id` = `p`.`address_id`
-            WHERE
-                `p`.`deleted_at` IS NULL AND `p`.`id` = :id
-            ";
-
-            /**
-             * Statement to prepare and bind the values.
-             * 
-             * @var \PDOStatement $stmt
-             */
-            $stmt = $this->getConnection()->prepare($q);
-
-            $stmt->bindValue(":id", $id);
-            
-            $stmt->execute();
-
-            /**
-             * The fetched associative array of the Address.
-             * 
-             * @var array $fetch
-             */
-            $fetch = $this->formatFetchResult($stmt->fetch(PDO::FETCH_NAMED));
-
-            return $fetch;
-        }
-
-        /**
-         * Updates all the fields of the Person, includind the Address ID.         
+         * Updates all the fields of the Person, includind the Address ID.
          *
          * @param int $id The ID of the Person to Update.
          * @param \model\Person $model The Person Model with the data to Update.
          * @return array The returned array is the same as the Model, already updated.
          */
-        public function update(int $id, object $model) : array
+        public static function update(int $id, Model $model) : array
         {       
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\PersonController $controller
+             */
+            $controller = new PersonController();
+
             /**
              * Update query.
              * 
              * @var string $q
              */    
             $q = "UPDATE
-                `{$this->getTableName()}`
+                `{$controller->table()}`
             SET             
                 `address_id` = :address_id,   
                 `type` = :type,
@@ -243,18 +223,18 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
             $stmt->bindValue(":id", $id);
 
-            $stmt->bindValue(":address_id", self::convertField($model->address_id));
-            $stmt->bindValue(":type", self::convertField($model->type));
-            $stmt->bindValue(":name", self::convertField($model->name));
-            $stmt->bindValue(":surname", self::convertField($model->surname));
-            $stmt->bindValue(":gender", self::convertField($model->gender));
-            $stmt->bindValue(":document", self::convertField($model->document));
-            $stmt->bindValue(":phone", self::convertField($model->phone));
-            $stmt->bindValue(":cellphone", self::convertField($model->cellphone));
+            $stmt->bindValue(":address_id", self::convertField($model->address->id()));
+            $stmt->bindValue(":type",       self::convertField($model->type));
+            $stmt->bindValue(":name",       self::convertField($model->name));
+            $stmt->bindValue(":surname",    self::convertField($model->surname));
+            $stmt->bindValue(":gender",     self::convertField($model->gender));
+            $stmt->bindValue(":document",   self::convertField($model->document));
+            $stmt->bindValue(":phone",      self::convertField($model->phone));
+            $stmt->bindValue(":cellphone",  self::convertField($model->cellphone));
             $stmt->bindValue(":birth_date", self::convertField($model->birth_date));
 
             $stmt->execute();
@@ -271,15 +251,22 @@
          * @param int $id The ID of the Person to delete.
          * @return bool The result of the deletion.
          */
-        public function delete(int $id) : bool
+        public static function delete(int $id) : bool
         {
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\PersonController $controller
+             */
+            $controller = new PersonController();
+
             /**
              * Update (as Delete) query.
              * 
              * @var string $q
              */
             $q = "UPDATE
-                `{$this->getTableName()}`
+                `{$controller->table()}`
             SET
                 `deleted_at` = NOW()
             WHERE
@@ -295,7 +282,7 @@
                  */
                 $q = "DELETE
                 FROM
-                    `{$this->getTableName()}`
+                    `{$controller->table()}`
                 WHERE
                     `id` = :id
                 ";
@@ -306,7 +293,7 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
             $stmt->bindValue(":id", $id);
 
@@ -319,15 +306,22 @@
          * @param int $address_id The ID of the deleted Address.
          * @return void
          */
-        public function deleteAddress(int $address_id) : void
+        public static function deleteAddress(int $address_id) : void
         {
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\PersonController $controller
+             */
+            $controller = new PersonController();
+            
             /**
              * Update (as deletion) query to set the Addresses IDs to `NULL`.
              * 
              * @var string $q
              */
             $q = "UPDATE
-                `{$this->getTableName()}`
+                `{$controller->table()}`
             SET
                 `address_id` = NULL
             WHERE
@@ -339,7 +333,7 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
             $stmt->bindValue(":id", $address_id);
 
@@ -347,19 +341,55 @@
         }
 
         /**
-         * Format the readed result list to a better array.
+         * Retrieve a specific Person by its ID.
          *
-         * @param array $result The array list with the retrievied models.
-         * @return array Still an array but with better key value pairs.
+         * @param int $id The Person ID.
+         * @return array The Person as a Model Array.
          */
-        private function handleReadResult(array $result) : array
+        final protected static function readById(int $id) : array
         {
-            for($i = 0; $i < count($result); $i++)
-            {                 
-                $result[$i] = $this->formatFetchResult($result[$i]);
-            }
-    
-            return $result;
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\PersonController $controller
+             */
+            $controller = new PersonController();
+            
+            /**
+             * Select query.
+             * 
+             * @var string $q
+             */
+            $q = "SELECT
+                *
+            FROM
+                `{$controller->table()}` AS `p`
+            LEFT JOIN `address` AS `a`
+            ON
+                `a`.`id` = `p`.`address_id`
+            WHERE
+                `p`.`deleted_at` IS NULL AND `p`.`id` = :id
+            ";
+
+            /**
+             * Statement to prepare and bind the values.
+             * 
+             * @var \PDOStatement $stmt
+             */
+            $stmt = $controller->connection()->prepare($q);
+
+            $stmt->bindValue(":id", $id);
+            
+            $stmt->execute();
+
+            /**
+             * The fetched associative array of the Address.
+             * 
+             * @var array $fetch
+             */
+            $fetch = $controller->formatFetchResult($stmt->fetch(PDO::FETCH_NAMED));
+
+            return $fetch;
         }
 
         /**
@@ -368,7 +398,7 @@
          * @param array $result The array fetched with the retrievied model.
          * @return array Still an array but with better key value pairs.
          */
-        private function formatFetchResult(array $result) : array
+        private static function formatFetchResult(array $result) : array
         {
             // ? Create a new subarray to hold the address data.
             $result["address"] = [];
@@ -416,6 +446,22 @@
 
             return $result;
         }
+
+        /**
+         * Format the readed result list to a better array.
+         *
+         * @param array $result The array list with the retrievied models.
+         * @return array Still an array but with better key value pairs.
+         */
+        private static function handleReadResult(array $result) : array
+        {
+            for($i = 0; $i < count($result); $i++)
+            {                 
+                $result[$i] = self::formatFetchResult($result[$i]);
+            }
+    
+            return $result;
+        }        
     }
 
     Autoload::unload(__FILE__);

@@ -33,7 +33,7 @@
          * @static
          * @final
          */
-        final public static function getActualDatabase() : ?string
+        public static function getActualDatabase() : ?string
         {
             self::startSessionIfNotStarted();
 
@@ -48,7 +48,7 @@
          * @static
          * @final
          */
-        final public static function setActualDatabase(string $db_name) : void
+        public static function setActualDatabase(string $db_name) : void
         {
             self::startSessionIfNotStarted();
             
@@ -67,7 +67,7 @@
          * @static
          * @final
          */
-        final public static function clearActualDatabase() : void
+        public static function clearActualDatabase() : void
         {
             self::startSessionIfNotStarted();
 
@@ -81,7 +81,7 @@
          * @static
          * @final
          */
-        final public static function getDatabaseValidNames() : array
+        public static function getDatabaseValidNames() : array
         {
             return self::VALID_NAMES;
         }
@@ -93,7 +93,7 @@
          * @static
          * @final
          */
-        final public static function getDeletionType() : bool
+        public static function getDeletionType() : bool
         {
             return self::SAFE_DELETE;
         }

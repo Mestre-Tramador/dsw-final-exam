@@ -23,9 +23,7 @@
      */
     if(Env::getActualDatabase() !== null)
     {
-        $connection = new Connection();
-
-        if($connection->getConnection() !== null)
+        if(Connection::new() !== null)
         {
             $db_name = Env::getActualDatabase();
 
@@ -43,9 +41,7 @@
      */
     foreach(Env::getDatabaseValidNames() as $name)
     {
-        $connection = new Connection(false, $name);
-
-        if($connection->getConnection() !== null)
+        if(Connection::new(false, $name) !== null)
         {
             $db_name = $name;
             break;

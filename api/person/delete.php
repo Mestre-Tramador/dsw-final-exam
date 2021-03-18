@@ -24,35 +24,19 @@
     /**
      * The model for the deleted Person.
      * 
-     * @var \model\Person $model
+     * @var \model\Person $person
      */
-    $model = new Person($_DELETE["id"]);
-
-    /**
-     * The controller for the deleted Person.
-     * 
-     * @var \controller\PersonController $controller
-     */
-    $controller = new PersonController();
+    $person = Person::find($_DELETE["id"]);
 
     /**
      *  Check for an Address on the model. If it was found, then
      * it's removed firstly to maintain the cascading deletion.
      */
-    if(isset($model->address_id))
+    if($person->haveAddress())
     {
-        /**
-         * The controller for the deleted Address.
-         * 
-         * @var \controller\AddressController $subcontroller
-         */
-        $subcontroller = new AddressController();
+        AddressController::delete($person->address->id());
 
-        $subcontroller->delete($model->address_id);
-
-        $controller->deleteAddress($model->address_id);
-
-        $model->setAddress(null);
+        PersonController::deleteAddress($person->address->id());
     }
 
     /**
@@ -60,7 +44,7 @@
      * 
      * @var bool $delete
      */
-    $delete = $controller->delete($model->id);
+    $delete = PersonController::delete($person->id());
 
     /**
      *  If everything goes well on the deletion, then an OK is responsed,

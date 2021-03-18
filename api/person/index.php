@@ -8,6 +8,7 @@
     use \helper\Response;
     use \helper\Route;
 
+
     Route::GET();
 
     /**
@@ -33,19 +34,12 @@
     }
 
     /**
-     * A controller to manage the Persons obtained.
-     * 
-     * @var \controller\PersonController $controller
-     */
-    $controller = new PersonController();
-
-    /**
      * Contains an array list with the Person(s)
      * fetched from the Database.
      * 
      * @var array $fetch
      */
-    $fetch = $controller->read($search);
+    $fetch = PersonController::read($search);
 
     /**
      *  The final response is allways OK, and the array

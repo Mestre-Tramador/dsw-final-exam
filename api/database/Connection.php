@@ -55,21 +55,13 @@
         private ?PDO $conn;
 
         /**
-         * The Exception of a fail Connection.
-         * * It is null when the Connection is successfull.
-         * 
-         * @var PDOException|null $err
-         */
-        private ?PDOException $err;
-
-        /**
          * When instanciated, the class try to connect with the Database Server.
          *
-         * @param boolean $root **TRUE** to access with root privileges.
+         * @param boolean $root   **TRUE** to access with root privileges.
          * @param string $db_name It can be used a custom name for the Database.
          * @return void
          */
-        public function __construct(bool $root = false, string $db_name = "")
+        private function __construct(bool $root = false, string $db_name = "")
         {
             $this->conn = null;
             $this->err = null;
@@ -94,34 +86,27 @@
             }
             catch(PDOException $exception)
             {
-                $this->err = $exception;
+                $this->conn = null;
             }
         }
 
         /**
-         * Getter for the connection.
+         * As the way to get the access to the Database.
          *
-         * @return \PDO The connection PDO object.
+         * @param boolean $root   **TRUE** to access with root privileges.
+         * @param string $db_name It can be used a custom name for the Database.
+         * @return PDO|null Direct connection as a PDO.
          */
-        public function getConnection() : ?\PDO
+        public static function new(bool $root = false, string $db_name = "") : ?PDO
         {
-            return $this->conn;
-        }
+            /**
+             * Inner connection to guarantee PDO access.
+             * 
+             * @var \database\Connection
+             */
+            $connection = new Connection($root, $db_name);
 
-        /**
-         * Getter for the connection error.
-         *
-         * @param boolean $throw **[optional]** If `TRUE`, then the error is throwed.
-         * @return PDOException
-         */
-        public function getError(bool $throw = false) : \PDOException
-        {
-            if($throw)
-            {
-                throw $this->err;
-            }
-
-            return $this->err;
+            return $connection->conn;
         }
     }
 

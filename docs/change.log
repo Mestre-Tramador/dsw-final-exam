@@ -1,3 +1,9 @@
+[1.0.0]
+- First Release.
+- Updated License file.
+- Updated Readme.
+- Rewrite of the API to work with PHP8 and static context.
+
 [0.0.10]
 - Refactored code to work with PHP8.
 - Refactored constructor methods to work with PHP8.

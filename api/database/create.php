@@ -33,16 +33,9 @@
         }
 
         /**
-         * The manager of the Database.
-         * 
-         * @var \manager\DatabaseManager
-         */
-        $manager = new DatabaseManager();     
-
-        /**
          * With the manager, then the Database is created, otherwise inform the error.
          */
-        if($manager->createDatabase($db_name))
+        if(DatabaseManager::createDatabase($db_name))
         {
             Response::responseOK(["database" => $db_name]);
         }

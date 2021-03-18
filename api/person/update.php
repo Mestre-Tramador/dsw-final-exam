@@ -35,19 +35,11 @@
      * 
      * @var \model\Person $model
      */
-    $model = new Person($_PUT["id"], $_PUT["address_id"]);
-
-    /**
-     * The controller for the updated Person.
-     * 
-     * @var \controller\PersonController $controller
-     */
-    $controller = new PersonController();
+    $model = Person::find($_PUT["id"]);
 
     /**
      * ? For Documenting purposes, the types of the Model's Attributes are setted.
      */
-
     /** @var string $type */
     $model->type = $_PUT["type"];
     
@@ -83,32 +75,24 @@
          * 
          * @var \model\Address $submodel
          */
-        $submodel = new Address();
-
-        /**
-         * The controller for the created/updated Address.
-         * 
-         * @var \controller\AddressController $subcontroller
-         */
-        $subcontroller = new AddressController();
+        $submodel = Address::instantiate();
 
         /**
          * If there is an Address ID, then the submodel is reloaded with data.
          */
-        if(isset($model->address_id))
+        if($model->address->id() !== null)
         {
             /**
              * This model starts with data.
              * 
              * @var \model\Address $submodel
              */
-            $submodel = new Address($model->address_id);
+            $submodel = Address::find($model->address->id());
         }
 
         /**
          * ? For Documenting purposes, the types of the SubModel's Attributes are setted.
          */
-
         /** @var string $zip_code */
         $submodel->zip_code = $_PUT["zip_code"];
         
@@ -133,11 +117,11 @@
         /** @var string $state */
         $submodel->state = $_PUT["state"];
 
-        $subcontroller->create($submodel);
+        AddressController::create($submodel);
 
-        $model->setAddress($submodel->id);
+        $model->joinAddress($submodel->id());
     }
-    else if(isset($model->address_id))
+    else if($model->address->id() !== null)
     {
         /**
          * The controller for the deleted Address.
@@ -146,11 +130,11 @@
          */
         $subcontroller = new AddressController();
 
-        $subcontroller->delete($model->address_id);
+        AddressController::delete($model->address->id());
 
-        $controller->deleteAddress($model->address_id);
+        PersonController::deleteAddress($model->address->id());
 
-        $model->setAddress(null);
+        $model = Person::find($model->id());
     }
 
     /**
@@ -158,7 +142,7 @@
      * 
      * @var array $person
      */
-    $person = $controller->update($model->id, $model);
+    $person = PersonController::update($model->id(), $model);
 
     Response::responseOK($person);
 ?>

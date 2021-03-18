@@ -5,6 +5,11 @@
 
     use \api\Autoload;
 
+    /**
+     * Class to manage Responses and JSONs.
+     * 
+     * @final
+     */
     final class Response
     {
         /**
@@ -34,7 +39,7 @@
          * @static
          * @final
          */
-        final public static function responseOK(?array $data = null) : void
+        public static function responseOK(?array $data = null) : void
         {
             self::response(self::OK);
 
@@ -55,7 +60,7 @@
          * @static
          * @final
          */
-        final public static function responseError(string $reason = "Untreated Error") : void
+        public static function responseError(string $reason = "Untreated Error") : void
         {
             self::response(self::ERROR);
 
@@ -74,7 +79,7 @@
          * @static
          * @final
          */
-        final public static function responseUnprocessable(?array $fields = null, string $reason = "Untreated Error") : void
+        public static function responseUnprocessable(?array $fields = null, string $reason = "Untreated Error") : void
         {
             self::response(self::UNPROCESSABLE);
 

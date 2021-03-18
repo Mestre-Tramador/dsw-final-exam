@@ -19,15 +19,21 @@
     final class DatabaseManager
     {       
         /**
-         * The manager at the beginning create the Connection with root privileges.
+         * This is a Root Connection to execute heavy tasks.
          * 
-         * @param \database\Connection $root This is a Root Connection to execute heavy tasks.
+         * @var PDO $root
+         */
+        private PDO $root;
+
+        /**
+         * The manager can only create itself, and also with Root privileges.
+         * 
          * @return void
          */
-        public function __construct(
-            private Connection $root = new Connection(true)
-        )
-        { }
+        private function __construct()
+        {
+            $this->root = Connection::new(true);
+        }
 
         /**
          * With the given name, search on the resources and create a Database.
@@ -35,13 +41,36 @@
          *
          * @param string $name The Database name.
          * @return bool The result of the creation
+         * @static
          */
-        public function createDatabase(string $name) : bool
+        public static function createDatabase(string $name) : bool
         {
+            /**
+             * Intern manager to execute functions.
+             * 
+             * @var \manager\DatabaseManager $manager
+             */
+            $manager = new DatabaseManager();
+
+            /**
+             * The big query for the Database.
+             * 
+             * @var string $builder
+             */
             $builder = file_get_contents("../resources/{$name}.sql");
             
-            $builder = $this->getRootConnection()->prepare($builder);
+            /**
+             * The query preparated.
+             * 
+             * @var \PDOStatement $builder
+             */
+            $builder = $manager->root->prepare($builder);
 
+            /**
+             * The statemente result.
+             * 
+             * @var bool $statement
+             */
             $statement = $builder->execute();
 
             if($statement)
@@ -56,26 +85,39 @@
          * Get the Database on the ENV and delete it.
          *
          * @return bool The result of the exclusion.
+         * @static
          */
-        public function destroyDatabase() : bool
+        public static function destroyDatabase() : bool
         {
+            /**
+             * Intern manager to execute functions.
+             * 
+             * @var \manager\DatabaseManager $manager
+             */
+            $manager = new DatabaseManager();
+
+            /**
+             * The Database name.
+             * 
+             * @var string
+             */
             $db_name = Env::getActualDatabase();
 
+            /**
+             * The big query for the Database.
+             * 
+             * @var string $builder
+             */
             $builder = "DROP DATABASE `{$db_name}`";
 
-            $builder = $this->getRootConnection()->prepare($builder);
+            /**
+             * The query preparated.
+             * 
+             * @var \PDOStatement $builder
+             */
+            $builder = $manager->root->prepare($builder);
 
             return $builder->execute();
-        }
-
-        /**
-         * Getter for the PDO Connection object.
-         *
-         * @return \PDO The Connection with root privileges.
-         */
-        private function getRootConnection() : \PDO
-        {
-            return $this->root->getConnection();
         }
     }
 

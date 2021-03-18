@@ -7,15 +7,13 @@
     
     use \controller\PersonController;
 
-    class Person extends Model
-    {
-        /**
-         * The \``address_id`\` field.
-         * 
-         * @var int|null $address_id
-         */
-        public ?int $address_id;
-        
+    /**
+     * The Model representantion of the \``person`\` table.
+     * 
+     * @final
+     */
+    final class Person extends Model
+    {        
         /**
          * The \``type`\` field.
          * 
@@ -94,76 +92,74 @@
         public ?string $deleted_at;
 
         /**
-         * Used to relate to the Address.
+         * The Address.
          * 
          * @var Address|null $address
          */
-        private ?Address $address;
+        public ?Address $address;
 
         /**
          * The Person can be started with an ID or not.
          * Also an Address Foreing ID can be setted.
          *
-         * @param int|null $id The Person ID, if exists.
-         * @param int|null $address_id To already set an Address, then its ID must be passed along the Person's.
+         * @param int|null $id The Person ID.
+         * @param int|null $address_id The Persons's Address ID.
          * @return void
          */
-        public function __construct(?int $id = null, ?int $address_id = null)
+        private function __construct(?int $id = null,
+            private ?int $address_id = null
+        )
         {
             parent::__construct($id);
-
-            $this->address_id = $address_id;
-
-            $this->address = new Address($this->address_id);
-
-            if(isset($this->id))
+            
+            if($this->haveAddress())
             {
-                $this->find();
+                $this->address = Address::find($this->address_id);
             }
+        }   
+        
+        /**
+         * Instantiate a new Person.
+         *
+         * @return \model\Person
+         */
+        final public static function instantiate(): Person
+        {
+            return new Person();
         }
 
         /**
-         * A setter for the Address, determined by its ID or **NULL**.
+         * Find a Person by its ID.
          *
-         * @param int $address_id The ID of the Foreign Address entry or **NULL** to remove.
-         * @return void
+         * @param int $id A Person ID.
+         * @return \model\Person
          */
-        public function setAddress(?int $address_id) : void
+        final public static function find(int $id): Person
         {
-            $this->address_id = $address_id;
-
-            $this->address = new Address($this->address_id);
-        }
-
-        /**
-         * Execute a Controller read funtion to set the Person (and Address, if) data.
-         *
-         * @return void
-         */
-        protected function find(): void
-        {
-            $controller = new PersonController();
-
-            $model = $controller->read($this->id);
-
-            $this->type = $model["type"];
-            $this->name = $model["name"];
-            $this->surname = $model["surname"];
-            $this->gender = $model["gender"];
-            $this->document = $model["document"];
-            $this->phone = $model["phone"];
-            $this->cellphone = $model["cellphone"];
-            $this->birth_date = $model["birth_date"];
-            $this->created_at = $model["created_at"];
-            $this->updated_at = $model["updated_at"];
-            $this->deleted_at = $model["deleted_at"];
+            $person = new Person($id);
+            
+            $model = PersonController::read($id);
 
             if(isset($model["address"]["id"]))
             {
-                $this->setAddress($model["address"]["id"]);
+                $person->joinAddress($model["address"]["id"]);
             }
-        }
 
+            $person->type       = $model["type"];
+            $person->name       = $model["name"];
+            $person->surname    = $model["surname"];
+            $person->gender     = $model["gender"];
+            $person->document   = $model["document"];
+            $person->phone      = $model["phone"];
+            $person->cellphone  = $model["cellphone"];
+            $person->birth_date = $model["birth_date"];
+            $person->created_at = $model["created_at"];
+            $person->updated_at = $model["updated_at"];
+            $person->deleted_at = $model["deleted_at"];
+
+            return $person;
+        }
+        
         /**
          * Get the current object as an array with the following keys:
          * * id
@@ -179,7 +175,7 @@
          *
          * @return array The returned array is associative.
          */
-        public function asArray() : array
+        final public function asArray() : array
         {
             /**
              * The address representation.
@@ -188,7 +184,7 @@
              */
             $address = null;
             
-            if(isset($this->address->id))
+            if($this->haveAddress())
             {
                 /**
                  * If there is an Address, then it gains its data.
@@ -199,7 +195,7 @@
             }
 
             return [
-                "id"         => $this->id,
+                "id"         => $this->id(),
                 "address"    => $address,
                 "type"       => $this->type,
                 "name"       => $this->name,
@@ -210,6 +206,31 @@
                 "cellphone"  => $this->cellphone,
                 "birth_date" => $this->birth_date
             ];
+        }
+
+        /**
+         * Verify the presence of an Address.
+         *
+         * @return boolean `TRUE` if present.
+         */
+        public function haveAddress() : bool
+        {
+            return isset($this->address_id);
+        }
+
+        /**
+         * Join a Address to a User.
+         *
+         * @param int $address_id The ID of the Foreign Address entry.
+         * @return \model\Person
+         */
+        public function joinAddress(int $address_id) : Person
+        {
+            $this->address_id = $address_id;
+
+            $this->address = Address::find($address_id);
+
+            return $this;
         }
     }
 

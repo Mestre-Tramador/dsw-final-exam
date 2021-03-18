@@ -3,32 +3,41 @@
     
     require_once "../load.php";
 
+    use \Exception;
+
     use \api\Autoload;
 
     /**
      * A Model of a Database table.
+     * 
      * @abstract
      */
     abstract class Model
     {        
         /**
-         * When creating a Model from the Database, its ID are required.
+         * Pure models cannot be created.
          *
-         * @param int|null $id The ID of the Model.
          * @return void
          */
-        public function __construct(
-            public ?int $id = null
+        protected function __construct(
+            private ?int $id = null
         )
-        { }
+        { }              
 
         /**
          * Find and set the data of the model.
          *
-         * @return void
+         * @return Model
          */
-        abstract protected function find() : void;
-        
+        abstract public static function find(int $id) : Model;
+
+        /**
+         * Instantiate a new model.
+         *
+         * @return Model
+         */
+        abstract public static function instantiate() : Model;
+
         /**
          * Return all the data of the Model as an Array.
          *
@@ -36,6 +45,34 @@
          * @abstract
          */
         abstract public function asArray() : array;
+
+        /**
+         * Get the current ID of the model.
+         *
+         * @return int
+         */
+        final public function id() : ?int
+        {
+            return $this->id;
+        }
+        
+        /**
+         * Set a new ID to the model.
+         *
+         * @param int $id The new ID.
+         * @return void
+         */
+        final public function newId(int $id) : void
+        {
+            if(!isset($this->id))
+            {
+                $this->id = $id;
+
+                return;
+            }
+
+            throw new Exception("Defining already existing ID!", 401);            
+        }
     }
     
     Autoload::unload(__FILE__);

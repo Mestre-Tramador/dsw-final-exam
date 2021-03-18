@@ -9,8 +9,10 @@
 
     /**
      * The Model representantion of the \``address`\` table.
+     * 
+     * @final
      */
-    class Address extends Model
+    final class Address extends Model
     {
         /**
          * The \``zip_code`\` field.
@@ -92,51 +94,49 @@
         /**
          * The Address can be started with an ID or not.
          *
-         * @param int|null $id If an ID is passed, then it's loaded.
+         * @param int|null $id The Address ID.
          * @return void
          */
-        public function __construct(?int $id = null)
+        private function __construct(?int $id = null)
         {
             parent::__construct($id);
-
-            if(isset($this->id))
-            {
-                $this->find();
-            }
         }
 
         /**
-         * Execute a Controller read action to set the Address data.
+         * Instantiate a new Address.
          *
-         * @return void
+         * @return Address
          */
-        protected function find(): void
+        public static function instantiate(): Address
         {
-            /**
-             * The controller for the operation.
-             * 
-             * @var \controller\AddressController $controller
-             */
-            $controller = new AddressController();
+            return new Address();
+        }
 
-            /**
-             * The readed model already fetch.
-             * 
-             * @var array $model
-             */
-            $model = $controller->read($this->id);
+        /**
+         * Find an Address by its ID.
+         *
+         * @param int $id The Address ID.
+         * @return \model\Address
+         */
+        public static function find(int $id): Address
+        {
+            $address = new Address($id);
 
-            $this->zip_code   = $model["zip_code"];
-            $this->street     = $model["street"];
-            $this->number     = (int) $model["number"];
-            $this->complement = $model["complement"];
-            $this->reference  = $model["reference"];
-            $this->district   = $model["district"];
-            $this->city       = $model["city"];
-            $this->state      = $model["state"];
-            $this->created_at = $model["created_at"];
-            $this->updated_at = $model["updated_at"];
-            $this->deleted_at = $model["deleted_at"];
+            $model = AddressController::read($id);
+
+            $address->zip_code   = $model["zip_code"];
+            $address->street     = $model["street"];
+            $address->number     = (int) $model["number"];
+            $address->complement = $model["complement"];
+            $address->reference  = $model["reference"];
+            $address->district   = $model["district"];
+            $address->city       = $model["city"];
+            $address->state      = $model["state"];
+            $address->created_at = $model["created_at"];
+            $address->updated_at = $model["updated_at"];
+            $address->deleted_at = $model["deleted_at"];
+
+            return $address;
         }
 
         /**
@@ -156,7 +156,7 @@
         public function asArray() : array
         {
             return [
-                "id"         => $this->id,
+                "id"         => $this->id(),
                 "zip_code"   => $this->zip_code,
                 "street"     => $this->street,
                 "number"     => $this->number,

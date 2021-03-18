@@ -18,17 +18,10 @@
     if(Env::getActualDatabase() !== null)
     {
         /**
-         * The Database Manager.
-         * 
-         * @var \manager\DatabaseManager
-         */
-        $manager = new DatabaseManager();
-
-        /**
          * With the manager, destroy the Database and clear the ENV.
          * The response is the OK procedure.
          */
-        if($manager->destroyDatabase())
+        if(DatabaseManager::destroyDatabase())
         {
             Env::clearActualDatabase();
             

@@ -28,20 +28,11 @@
      * 
      * @var \model\Person $model
      */
-    $model = new Person();
-
-    /**
-     * The controller for the created Person.
-     * 
-     * @var \controller\PersonController $controller
-     */
-    $controller = new PersonController();
-    
+    $model = Person::instantiate();  
 
     /**
      * ? For Documenting purposes, the types of the Model's Attributes are setted.
      */
-
     /** @var string $type */
     $model->type = $_POST["type"];
     
@@ -72,7 +63,7 @@
      * 
      * @var array $person
      */
-    $person = $controller->create($model);
+    $person = PersonController::create($model);
 
     /**
      * If the result is false, then an Error is informed to the User.
@@ -99,20 +90,11 @@
          * 
          * @var \model\Address $submodel
          */
-        $submodel = new Address();
-
-        /**
-         * The controller for the created Address.
-         * 
-         * @var \controller\AddressController $subcontroller
-         */
-        $subcontroller = new AddressController();
-
+        $submodel = Address::instantiate();
         
         /**
          * ? For Documenting purposes, the types of the SubModel's Attributes are setted.
          */
-
         /** @var string $zip_code */
         $submodel->zip_code = $_POST["zip_code"];
         
@@ -142,7 +124,7 @@
          * 
          * @var array $address
          */
-        $address = $subcontroller->create($submodel);
+        $address = AddressController::create($submodel);
 
         /**
          * If the result is false, then an Error is informed to the User.
@@ -150,7 +132,7 @@
          */
         if(!$address["result"])
         {
-            $controller->delete($model->id);
+            PersonController::delete($model->id);
 
             Response::responseError("An error occured when creating the Address!");
         }
@@ -165,9 +147,9 @@
         /**
          * The address of the Person Model is setted and the model is updated.
          */
-        $model->setAddress($address["id"]);
+        $model->joinAddress($address["id"]);
 
-        $person = $controller->update($model->id, $model);
+        $person = PersonController::update($model->id(), $model);
     }
 
     /**

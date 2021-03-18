@@ -9,19 +9,23 @@
 
     use \database\Connection;
 
+    use \model\Model;
+
     /**
      * This Controller handle the \``address`\` table.
+     * 
+     * @final
      */
     class AddressController extends Controller
     {
         /**
-         * When creating this Controller, the necessary data is already setted.
+         * Only the Controller can instantiate itself.
          * 
          * @return void
          */
-        public function __construct()
+        private function __construct()
         {
-            parent::__construct((new Connection()), "address");
+            parent::__construct(Connection::new(), "address");
         }
 
         /**
@@ -33,19 +37,26 @@
          * @return array The array returned contains a **result** `boolean` key with the query result,
          * and another **model** `array` key with the created model as an array.
          */
-        public function create(object $model) : array
+        public static function create(Model $model) : array
         {
-            if(isset($model->id))
+            if(self::containsData($model))
             {
-                return $this->update($model->id, $model);
+                return self::update($model->id(), $model);
             }
+
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\AddressController $controller
+             */
+            $controller = new AddressController();
             
             /**
              * Insert query.
              * 
              * @var string $q
              */
-            $q = "INSERT INTO `{$this->getTableName()}`(
+            $q = "INSERT INTO `{$controller->table()}`(
                 `zip_code`,
                 `street`,
                 `number`,
@@ -75,16 +86,16 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
-            $stmt->bindValue(":zip_code", self::convertField($model->zip_code));
-            $stmt->bindValue(":street", self::convertField($model->street));
-            $stmt->bindValue(":number", self::convertField($model->number));
+            $stmt->bindValue(":zip_code",   self::convertField($model->zip_code));
+            $stmt->bindValue(":street",     self::convertField($model->street));
+            $stmt->bindValue(":number",     self::convertField($model->number));
             $stmt->bindValue(":complement", self::convertField($model->complement));
-            $stmt->bindValue(":reference", self::convertField($model->reference));
-            $stmt->bindValue(":district", self::convertField($model->district));
-            $stmt->bindValue(":city", self::convertField($model->city));
-            $stmt->bindValue(":state", self::convertField($model->state));
+            $stmt->bindValue(":reference",  self::convertField($model->reference));
+            $stmt->bindValue(":district",   self::convertField($model->district));
+            $stmt->bindValue(":city",       self::convertField($model->city));
+            $stmt->bindValue(":state",      self::convertField($model->state));
 
             /**
              * The result of the query execution.
@@ -93,7 +104,7 @@
              */
             $result = $stmt->execute();
 
-            $model->id = (int) $this->getConnection()->lastInsertId();      
+            $model->newId((int) $controller->connection()->lastInsertId());
 
             /**
              * Final array for return.
@@ -118,12 +129,19 @@
          * @param int|null $id Pass an ID to return the indexed Address.
          * @return array The list of the retrivied models as arrays.
          */        
-        public function read(?int $id = null) : array
+        public static function read(?int $id = null) : array
         {
             if(isset($id))
             {
-                return $this->readById($id);
+                return self::readById($id);
             }
+
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\AddressController $controller
+             */
+            $controller = new AddressController();
 
             /**
              * Select query.
@@ -133,7 +151,7 @@
             $q = "SELECT
                 *
             FROM
-                `{$this->getTableName()}`
+                `{$controller->table()}`
             WHERE
                 `deleted_at` IS NULL
             ";
@@ -143,7 +161,7 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
             
             $stmt->execute();
 
@@ -163,8 +181,15 @@
          * @param int $id The Address ID.
          * @return array The Address as a Model Array.
          */
-        protected function readById(int $id): array
+        protected static function readById(int $id): array
         {
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\AddressController $controller
+             */
+            $controller = new AddressController();
+
             /**
              * Select query.
              * 
@@ -173,7 +198,7 @@
             $q = "SELECT
                 *
             FROM
-                `{$this->getTableName()}`
+                `{$controller->table()}`
             WHERE
                 `deleted_at` IS NULL AND `id` = :id
             ";
@@ -183,7 +208,7 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
             $stmt->bindValue(":id", $id);
             
@@ -206,15 +231,22 @@
          * @param \model\Address $model The Address Model with the data to Update
          * @return array The returned array is the same as the Model, already updated.
          */
-        public function update(int $id, object $model) : array
+        public static function update(int $id, object $model) : array
         {
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\AddressController $controller
+             */
+            $controller = new AddressController();
+
             /**
              * Update query.
              * 
              * @var string $q
              */    
             $q = "UPDATE
-                `{$this->getTableName()}`
+                `{$controller->table()}`
             SET             
                 `zip_code` = :zip_code,   
                 `street` = :street,
@@ -234,18 +266,18 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
             $stmt->bindValue(":id", $id);
 
-            $stmt->bindValue(":zip_code", self::convertField($model->zip_code));
-            $stmt->bindValue(":street", self::convertField($model->street));
-            $stmt->bindValue(":number", self::convertField($model->number));
+            $stmt->bindValue(":zip_code",   self::convertField($model->zip_code));
+            $stmt->bindValue(":street",     self::convertField($model->street));
+            $stmt->bindValue(":number",     self::convertField($model->number));
             $stmt->bindValue(":complement", self::convertField($model->complement));
-            $stmt->bindValue(":reference", self::convertField($model->reference));
-            $stmt->bindValue(":district", self::convertField($model->district));
-            $stmt->bindValue(":city", self::convertField($model->city));
-            $stmt->bindValue(":state", self::convertField($model->state));
+            $stmt->bindValue(":reference",  self::convertField($model->reference));
+            $stmt->bindValue(":district",   self::convertField($model->district));
+            $stmt->bindValue(":city",       self::convertField($model->city));
+            $stmt->bindValue(":state",      self::convertField($model->state));
 
             $stmt->execute();
 
@@ -261,15 +293,22 @@
          * @param int $id The ID of the Address to delete.
          * @return bool The result of the deletion.
          */
-        public function delete(int $id) : bool
+        public static function delete(int $id) : bool
         {
+            /**
+             * Intern controller to execute functions.
+             * 
+             * @var \controller\AddressController $controller
+             */
+            $controller = new AddressController();
+
             /**
              * Update (as Delete) query.
              * 
              * @var string $q
              */
             $q = "UPDATE
-                `{$this->getTableName()}`
+                `{$controller->table()}`
             SET
                 `deleted_at` = NOW()
             WHERE
@@ -285,7 +324,7 @@
                  */
                 $q = "DELETE
                 FROM
-                    `{$this->getTableName()}`
+                    `{$controller->table()}`
                 WHERE
                     `id` = :id
                 ";
@@ -296,7 +335,7 @@
              * 
              * @var \PDOStatement $stmt
              */
-            $stmt = $this->getConnection()->prepare($q);
+            $stmt = $controller->connection()->prepare($q);
 
             $stmt->bindValue(":id", $id);
 
