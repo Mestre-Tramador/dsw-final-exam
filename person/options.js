@@ -101,7 +101,21 @@ function getDataToUpdate()
 /**
  * Mask a value to put on the form based on its control ID.
  * 
- * @param {"name"|"surname"|"document"|"birth_date"|"gender"|"phone"|"cellphone"|"street"|"number"|"district"|"zip_code"|"complement"|"reference"|"city"|"state"} control The ID of the Control HTML Element.
+ * @param {"name" |
+ *  "surname"     |
+ *  "document"    |
+ *  "birth_date"  |
+ *  "gender"      |
+ *  "phone"       |
+ *  "cellphone"   |
+ *  "street"      |
+ *  "number"      |
+ *  "district"    |
+ *  "zip_code"    |
+ *  "complement"  |
+ *  "reference"   |
+ *  "city"        |
+ *  "state"} control     The ID of the Control HTML Element.
  * @param {String} value The value to be masked.
  * @returns {String} The value correctly masked.
  */

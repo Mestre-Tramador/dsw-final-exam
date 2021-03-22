@@ -4,19 +4,19 @@
 <html>
     <head>
         <!-- Start of the Meta Tags Section. -->
-            <?=getMetaTagsDeclarations()?>
+            <?=Main::getMetaTagsDeclarations()?>
         <!-- End of the Meta Tags Section. -->
 
         <!-- Start of the Title. -->
-            <?=getTitleDeclaration()?>
+            <?=Main::getTitleDeclaration()?>
         <!-- End of the Title. -->
 
         <!-- Start of the Icon. -->
-            <?=getFavIconDeclaration()?>
+            <?=Main::getFavIconDeclaration()?>
         <!-- End of the Icon. -->
 
         <!-- Start of the Style Links Section. -->
-            <?=getStylesDeclarations()?>
+            <?=Main::getStylesDeclarations()?>
             <link rel="stylesheet" href="/store/index.css?=<?=time()?>" />
         <!-- End of the Style Links Section. -->
     </head>
@@ -117,7 +117,7 @@
         <!-- End of the content. -->
         
         <!-- Start of the Scripts Section. -->
-            <?=getScriptsDeclarations()?>
+            <?=Main::getScriptsDeclarations()?>
             <script type="application/javascript" src="/store/index.js?=<?=time()?>"></script>
         <!-- End of the Scripts Section. -->
     </body>

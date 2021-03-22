@@ -2,9 +2,9 @@
     namespace api;
     
     /**
-     * The array for `DELETE` routes.
+     * The array for `PUT` routes.
      * 
-     * @global array $_DELETE
+     * @global array $_PUT
      */
     $_PUT = [];
     

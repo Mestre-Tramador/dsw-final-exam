@@ -1,4 +1,21 @@
 /**
+ * Compares to see if both forms are valid.
+ * 
+ * @param {Boolean} personForm  The validation result for the Person Form.
+ * @param {Boolean} addressForm The validation result for the Address Form.
+ * @returns {Boolean} **TRUE** if the form is valid.
+ */
+const isValid = (personForm, addressForm) => (personForm === true && addressForm === true);
+
+/**
+ * Unmask an input value.
+ * 
+ * @param {String} value The masked value.
+ * @returns {String} The value corrected
+ */
+const unmask = (value) =>value.replace(/[\(\)\.\-\/\ ]/gm, "");
+
+/**
  * Handle if the feedback of a Form Control will be shown or hided.
  * 
  * @param {Boolean} display ***TRUE** to display and **FALSE** to hide.
@@ -37,9 +54,9 @@ function displayControlFeedback(display, id)
 /**
  * Gather all data from the form and URI encodes it to pass by POST.
  * 
- * @param {String} [id] Pass if there is an ID to include on the data.
- * @param {String} [address_id] Pass if there is an Address ID to include on the data.
- * @returns {String}
+ * @param {String} [id]          Pass if there is an ID to include on the data.
+ * @param {?String} [address_id] Pass if there is an Address ID to include on the data.
+ * @returns {String} The URI encoded.
  */
 function gatherData(id = "", address_id = null)
 {
@@ -107,18 +124,6 @@ function gatherData(id = "", address_id = null)
 }
 
 /**
- * Compares to see if both forms are valid.
- * 
- * @param {Boolean} personForm The validation result for the Person Form.
- * @param {Boolean} addressForm The validation result for the Address Form.
- * @returns {Boolean} **TRUE** if the form is valid.
- */
-function isValid(personForm, addressForm)
-{
-    return (personForm === true && addressForm === true);
-}
-
-/**
  * Validate the form and, if valid, do a Request to save the Person on the Database.
  * When success, then it redirects to the Index, else display the error.
  *  
@@ -141,8 +146,8 @@ function savePerson(event)
             /**
              * Print on the console the error.
              * 
-             * @param {jqXHR} xhr jQuery XHR object.
-             * @param {String} status HTTP Status.
+             * @param {jqXHR} xhr             jQuery XHR object.
+             * @param {String} status         HTTP Status.
              * @param {{reason:String}} error Returns the reason.
              */
             function onError(xhr, status, error)
@@ -224,19 +229,6 @@ function setFormData(person)
 }
 
 /**
- * Unmask an input value.
- * 
- * @param {String} value The masked value.
- * @returns {String} The value corrected
- */
-function unmask(value)
-{
-    value = value.replace(/[\(\)\.\-\/\ ]/gm, "");
-    
-    return value;
-}
-
-/**
  * At same time validates both forms and return the individuals results.
  * 
  * @returns {Promise<[Boolean, Boolean]>} The first key is for the Person form and the second for the Address.
@@ -244,14 +236,14 @@ function unmask(value)
 function validateForm()
 {
     return Promise.all([
-        validateUserForm(),
+        validatePersonForm(),
         validateAddressForm()
     ]);    
 
     /**
      * This is the promise to validate the Address form.
      * 
-     * @returns {Promise<Boolean>}
+     * @returns {Promise<Boolean>} The validation of the Address form.
      */
     function validateAddressForm()
     {
@@ -379,11 +371,11 @@ function validateForm()
     }
 
     /**
-     * This is the promise to validate the Address form.
+     * This is the promise to validate the Person form.
      * 
-     * @returns {Promise<Boolean>}
+     * @returns {Promise<Boolean>} The validation of the Person form.
      */
-    function validateUserForm()
+    function validatePersonForm()
     {
         return new Promise((resolve) => {
             /**
@@ -398,9 +390,9 @@ function validateForm()
              * 
              * @type {(HTMLInputElement|HTMLSelectElement)[]}
              */
-            const userForm = getFullForm().slice(0, 9);            
+            const personForm = getFullForm().slice(0, 9);            
 
-            userForm.forEach((control) => {
+            personForm.forEach((control) => {
                 /**
                  * The result of the validation of the control.
                  * 

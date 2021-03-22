@@ -95,6 +95,22 @@ function cpfMask(event)
 function documentNumberDigits(event)
 {    
     /**
+     * Get the actual digit of the input.
+     * 
+     * @param {String} input The input value.
+     * @returns {String} The digit.
+     */
+    const getDigit = (input) => input.charAt((input.length - 1));
+
+    /**
+     * Remove the current digit of the value.
+     * 
+     * @param {String} input The input value.
+     * @returns {String} The value without the digit.
+     */
+    const removeDigit = (input) => input.substr(0, (input.length - 1));
+
+    /**
      * The target input.
      * 
      * @type {HTMLInputElement}
@@ -104,28 +120,7 @@ function documentNumberDigits(event)
     if(isNaN(Number(getDigit(input.value))))    
     {
         input.value = removeDigit(input.value);
-    }
-
-    /**
-     * Get the actual digit of the input.
-     * 
-     * @param {String} input The input value.
-     */
-    function getDigit(input)
-    {
-        return input.charAt((input.length - 1));
-    }
-
-    /**
-     * Remove the current digit of the value.
-     * 
-     * @param {String} input The input value.
-     * @returns {String} The value without the digit.
-     */
-    function removeDigit(input)
-    {
-        return input.substr(0, (input.length - 1));
-    }
+    }    
 }
 
 /**
@@ -135,6 +130,30 @@ function documentNumberDigits(event)
  */
 function documentTextDigits(event)
 {
+    /**
+     * Get the actual digit of the input.
+     * 
+     * @param {String} input The input value.
+     * @returns {String} The digit.
+     */
+    const getDigit = (input) => input.charAt((input.length - 1));
+
+    /**
+     * Check if the predecessor digit is a space, making it doubled.
+     * 
+     * @param {String} input The input value.
+     * @returns {Boolean} **TRUE** if it's a space.
+     */
+    const isDoubleSpace = (input) => (input.charAt((input.length - 2)) === " " && event.data === " ");
+
+    /**
+     * Remove the current digit of the value.
+     * 
+     * @param {String} input The input value.
+     * @returns {String} The value without the digit.
+     */
+    const removeDigit = (input) => input.substr(0, (input.length - 1));
+
     /**
      * The target input.
      * 
@@ -152,38 +171,7 @@ function documentTextDigits(event)
     if(!(regex).test(getDigit(input.value)) || isDoubleSpace(input.value))    
     {
         input.value = removeDigit(input.value);
-    }
-
-    /**
-     * Get the actual digit of the input.
-     * 
-     * @param {String} input The input value.
-     */
-    function getDigit(input)
-    {
-        return input.charAt((input.length - 1));
-    }
-
-    /**
-     * Check if the predecessor digit is a space, making it doubled.
-     * 
-     * @param {String} input The input value.
-     */
-    function isDoubleSpace(input)
-    {
-        return (input.charAt((input.length - 2)) === " " && event.data === " ");
-    }
-
-    /**
-     * Remove the current digit of the value.
-     * 
-     * @param {String} input The input value.
-     * @returns {String} The value without the digit.
-     */
-    function removeDigit(input)
-    {
-        return input.substr(0, (input.length - 1));
-    }
+    }    
 }
 
 /**
@@ -437,9 +425,9 @@ function handleTypeChange(event)
     /**
      * Add a determined Event to an input.
      * 
-     * @param {HTMLInputElement} input 
-     * @param {String} type 
-     * @param {Function} listener 
+     * @param {HTMLInputElement} input The Input Element.
+     * @param {String} type            The type of the event.
+     * @param {Function} listener      The listener for the event.
      */
     function eventListener(input, type, listener)
     {
@@ -484,7 +472,7 @@ function handleTypeChange(event)
      * Handle if the given input will have a max length.
      * 
      * @param {HTMLInputElement} input An input from the form.
-     * @param {String} maxLength A string with a valid number, or empty to remove.
+     * @param {String} maxLength       A string with a valid number, or empty to remove.
      */
     function handleMaxLength(input, maxLength)
     {
@@ -506,25 +494,22 @@ function handleTypeChange(event)
      */
     function labelText(input, text)
     {
-        label(input).innerText = text;
-
         /**
          * Getter for the label.
          * 
          * @param {HTMLInputElement} input An input from the form.
          * @returns {HTMLLabelElement} The Label Element.
          */
-        function label(input)
-        {
-            return input.labels.item(0);        
-        }
+        const label = (input) => input.labels.item(0);
+
+        label(input).innerText = text;        
     }
 
     /**
      * Set the text of the input placeholder.
      * 
      * @param {HTMLInputElement} input An input from the form.
-     * @param {String} text The placeholder text.
+     * @param {String} text            The placeholder text.
      */
     function placeholder(input, text)
     {

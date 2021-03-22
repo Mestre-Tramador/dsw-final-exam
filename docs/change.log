@@ -1,3 +1,9 @@
+[1.1.0]
+- Updated Main PHP class in Front End to static and final context.
+- Refactored some JavaScript functions to arrow functions.
+- Improved Documentation.
+- Created README in Spanish and Brazilian Portuguese.
+
 [1.0.0]
 - First Release.
 - Updated License file.

@@ -17,8 +17,8 @@ function createDatabase(name)
      * If the Database was created, then the Success Callback is runned.
      * 
      * @param {{database:"store"|"loja"}} data Returns the same name.
-     * @param {String} status HTTP Status.
-     * @param {jqXHR} xhr jQuery XHR object.
+     * @param {String} status                  HTTP Status.
+     * @param {jqXHR} xhr                      jQuery XHR object.
      */
     function onSuccess(data, status, xhr)
     {
@@ -34,8 +34,8 @@ function createDatabase(name)
     /**
      * If the Database wasn't created, then the Error Callback is runned.
      * 
-     * @param {jqXHR} xhr jQuery XHR object.
-     * @param {String} status HTTP Status.
+     * @param {jqXHR} xhr             jQuery XHR object.
+     * @param {String} status         HTTP Status.
      * @param {{reason:String}} error Returns the reason.
      */
     function onError(xhr, status, error)
@@ -94,9 +94,7 @@ function init()
 
         getPersonListData();
     })
-    .catch((rejection) => {
-        setCardMenus(database, menu);
-    });
+    .catch((rejection) => setCardMenus(database, menu));
 }
 
 /**
@@ -115,26 +113,14 @@ function refreshEnvironment()
     $.ajax({
         url     : "/store/api/database/reset.php",
         type    : "GET",
-        success : (data, status, xhr) => onSuccess(data, status, xhr)
+        success : (data, status, xhr) => goToIndex()
     }); 
-
-    /**
-     * If the Database was dropped, then the Success Callback is runned.
-     * 
-     * @param {{message:"OK"}} data Returns the message.
-     * @param {String} status HTTP Status.
-     * @param {jqXHR} xhr jQuery XHR object.
-     */
-    function onSuccess(data, status, xhr)
-    {        
-        goToIndex();
-    }
 }
 
 /**
  * Set the visibility between the two Card Bodies.
  * 
- * @param {HTMLDivElement} toShow The card body to show.
+ * @param {HTMLDivElement} toShow   The card body to show.
  * @param {HTMLDivElement} [toHide] The opitional card body to hide.
  */
 function setCardMenus(toShow, toHide = null)
@@ -179,7 +165,7 @@ function setDatabaseDeleteText(display)
 /**
  * Set the display on screen of a flavor text for a Database.
  * 
- * @param {Boolean} display ***TRUE** to display and **FALSE** to hide.
+ * @param {Boolean} display    **TRUE** to display and **FALSE** to hide.
  * @param {"S"|"L"} [database] If passed, handle wich text will be shown.
  */
 function setDatabaseFlavorText(display, database = "")
@@ -254,6 +240,43 @@ function setDatabaseFlavorText(display, database = "")
 function printPersonList(data)
 {
     /**
+     * Build the Person name.
+     * 
+     * @param {String} name    The Person name.
+     * @param {String} surname The Person surname.
+     * @returns {String} The Person full name.
+     */
+    const buildName = (name, surname) => `${name} ${surname}`;
+
+    /**
+      * Build the Person birth date. 
+      * 
+      * @param {"physical"|"legal"} type The type of the Person.
+      * @param {"F"|"M"|"O"} gender      The Person gender.
+      * @param {String} birth_date       The Person birth date.
+      * @returns {String} The full phrase with the birth date, according with the type.
+      */
+    const buildDate = (type, gender, birth_date) => `${(isPhysical(type) ? `Nascid${handleGenderCase(gender)}` : "Aberta")} em ${formatBirthDate(birth_date)}`;
+ 
+     /**
+      * Build the Person Address info.
+      * 
+      * @param {?Number} address_id The ID of the Person Address.
+      * @returns {String} The phrase according with the given ID.
+      */
+     const buildSubtext = (address_id) => `${address_id !== null ? "P" : "Não p"}ossui endereço cadastrado.`;
+ 
+     /**
+      * Build the person data text.
+      * 
+      * @param {"physical"|"legal"} type The type of the Person.
+      * @param {String} document         The Person document.
+      * @param {"F"|"M"|"O"} gender      The Person gender.
+      * @returns {String} The full phrase with the given data.
+      */
+     const buildText = (type, document, gender) => `Cadastrad${(isPhysical(type) ? `${handleGenderCase(gender)}` : "a")} sob documento ${mask(type, document)}`;
+
+    /**
      * The element for the list.
      * 
      * @type {HTMLDivElement}
@@ -300,8 +323,8 @@ function printPersonList(data)
      *  created_at:String,
      *  updated_at:String,
      *  deleted_at:null
-     * }} person 
-     * @returns {HTMLAnchorElement}
+     * }} person The full Person data.
+     * @returns {HTMLAnchorElement} The HTML Element with the data formatted.
      */
     function createPersonListItem(person)
     {
@@ -382,56 +405,7 @@ function printPersonList(data)
         // ? End of child appending.
 
         return item;
-    }
-
-    /**
-     * Build the person name.
-     * 
-     * @param {String} name 
-     * @param {String} surname 
-     * @returns {String}
-     */
-    function buildName(name, surname)
-    {
-        return `${name} ${surname}`;
-    }
-
-    /**
-     * Build the person birth date. 
-     * 
-     * @param {"physical"|"legal"} type 
-     * @param {"F"|"M"|"O"} gender 
-     * @param {String} birth_date 
-     * @returns {String}
-     */
-    function buildDate(type, gender, birth_date)
-    {
-        return `${(isPhysical(type) ? `Nascid${handleGenderCase(gender)}` : "Aberta")} em ${formatBirthDate(birth_date)}`
-    }
-
-    /**
-     * Build the person address info.
-     * 
-     * @param {Number|null} address_id 
-     * @returns {String}
-     */
-    function buildSubtext(address_id)
-    {
-        return `${address_id !== null ? "P" : "Não p"}ossui endereço cadastrado.`;
-    }
-
-    /**
-     * Build the person data text.
-     * 
-     * @param {"physical"|"legal"} type 
-     * @param {String} document 
-     * @param {"F"|"M"|"O"} gender 
-     * @returns {String}
-     */
-    function buildText(type, document, gender)
-    {
-        return `Cadastrad${(isPhysical(type) ? `${handleGenderCase(gender)}` : "a")} sob documento ${mask(type, document)}`
-    }
+    }    
 
     /**
      * Format the birth date.
@@ -478,7 +452,7 @@ function printPersonList(data)
      * Handle the final letter of a word based on the gender.
      * 
      * @param {"F"|"M"|"O"} gender The person gender.
-     * @param {Boolean} [toUpper] Pass **TRUE** to return it in UPPERCASE.
+     * @param {Boolean} [toUpper]  Pass **TRUE** to return it in UPPERCASE.
      * @returns {"a"|"A"|"o"|"O"|"e"|"E"} Is *a* for *F*, *o* for *M*, and *e* for *O*.
      */
     function handleGenderCase(gender, toUpper = false)
@@ -510,7 +484,7 @@ function printPersonList(data)
      * Mask a person document.
      * 
      * @param {"physical"|"legal"} type The type of the person, to differ the document mask
-     * @param {String} document The document number-only string.
+     * @param {String} document         The document number-only string.
      * @returns {String} The masked document string.
      */
     function mask(type, document)
